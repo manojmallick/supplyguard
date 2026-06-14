@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SupplyGuard — Pitch Deck</title>
+<style>
+  @page { size: 13.333in 7.5in; margin: 0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root{
+    --bg:#0B0D12; --surface:#151820; --card:#1C2030; --border:#2A3347;
+    --green:#65E075; --good:#34C759; --amber:#FF9500; --poor:#FF3B30;
+    --blue:#0A84FF; --violet:#8B5CF6; --text:#E5E7EB; --muted:#8B949E;
+  }
+  html,body{ background:var(--bg); color:var(--text);
+    font-family:Inter,-apple-system,Segoe UI,Roboto,sans-serif;
+    -webkit-print-color-adjust:exact; print-color-adjust:exact; }
+  .slide{ width:13.333in; height:7.5in; padding:0.8in 0.85in 0.95in;
+    position:relative; overflow:hidden; page-break-after:always;
+    display:flex; flex-direction:column; justify-content:center; }
+  .slide:last-child{ page-break-after:auto; }
+  .head{ flex:0 0 auto; margin-bottom:6px; }
+  .body{ flex:1 1 auto; display:flex; flex-direction:column; justify-content:center; }
+  .kicker{ color:var(--green); font-weight:700; letter-spacing:.14em;
+    text-transform:uppercase; font-size:13px; margin-bottom:14px; }
+  h1{ font-size:62px; line-height:1.03; letter-spacing:-1.5px; }
+  h2{ font-size:40px; line-height:1.08; letter-spacing:-.6px; margin-bottom:8px; }
+  .sub{ color:var(--muted); font-size:20px; margin-top:14px; }
+  .mono{ font-family:"SF Mono",ui-monospace,Menlo,monospace; }
+  .foot{ position:absolute; bottom:.45in; left:.85in; right:.85in;
+    display:flex; justify-content:space-between; color:var(--muted);
+    font-size:12px; border-top:1px solid var(--border); padding-top:10px; }
+  .pill{ display:inline-block; padding:5px 12px; border-radius:999px;
+    border:1px solid var(--border); font-size:13px; margin:4px 6px 0 0;
+    color:var(--text); background:var(--surface); }
+  .pill.g{ border-color:var(--green); color:var(--green); }
+  .pill.a{ border-color:var(--amber); color:var(--amber); }
+  .pill.v{ border-color:var(--violet); color:#c4b5fd; }
+  .grid{ display:grid; gap:16px; margin-top:8px; }
+  .g2{ grid-template-columns:1fr 1fr; } .g3{ grid-template-columns:1fr 1fr 1fr; }
+  .card{ background:var(--card); border:1px solid var(--border);
+    border-radius:14px; padding:20px 22px; }
+  .card h3{ font-size:18px; margin-bottom:8px; }
+  .card p{ color:var(--muted); font-size:15px; line-height:1.45; }
+  .big{ font-size:46px; font-weight:800; letter-spacing:-1px; }
+  .green{color:var(--green)} .good{color:var(--good)} .amber{color:var(--amber)}
+  .poor{color:var(--poor)} .blue{color:var(--blue)} .violet{color:#c4b5fd}
+  table{ width:100%; border-collapse:collapse; margin-top:10px; font-size:15px; }
+  th,td{ text-align:left; padding:9px 12px; border-bottom:1px solid var(--border); }
+  th{ color:var(--green); font-size:12px; text-transform:uppercase; letter-spacing:.08em; }
+  .term{ background:#06080c; border:1px solid var(--border); border-radius:12px;
+    padding:18px 20px; font-family:"SF Mono",ui-monospace,Menlo,monospace;
+    font-size:14px; line-height:1.7; }
+  .flow{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; margin-top:18px; }
+  .step{ background:var(--surface); border:1px solid var(--border);
+    border-radius:10px; padding:12px 14px; font-size:14px; }
+  .step b{ display:block; color:var(--green); font-size:12px; letter-spacing:.06em; }
+  .arrow{ color:var(--muted); font-size:20px; }
+  .center{ justify-content:center; align-items:center; text-align:center; }
+  .logo{ width:42px; height:42px; border-radius:10px; background:var(--green);
+    display:inline-flex; align-items:center; justify-content:center;
+    color:#06251a; font-weight:900; font-size:24px; vertical-align:middle; }
+  ul{ margin-left:20px; margin-top:8px; } li{ margin:7px 0; font-size:17px; }
+  .arch{ display:flex; flex-direction:column; align-items:center; gap:10px; margin-top:6px; }
+  .node{ background:var(--surface); border:1px solid var(--border); border-radius:12px;
+    padding:13px 22px; font-size:16px; text-align:center; min-width:6.2in; }
+  .node .mono{ font-size:15px; }
+  .node small{ display:block; color:var(--muted); font-size:12.5px; margin-top:3px; }
+  .varrow{ color:var(--green); font-size:20px; line-height:1; }
+  .agentbox{ border:1.5px solid var(--green); border-radius:14px; padding:16px 22px 18px;
+    background:rgba(101,224,117,.05); min-width:7.2in; position:relative; margin-top:4px; }
+  .agentlabel{ position:absolute; top:-11px; left:50%; transform:translateX(-50%);
+    background:var(--bg); padding:0 12px; color:var(--green); font-weight:700;
+    font-size:13px; letter-spacing:.06em; }
+  .agentrow{ font-size:15.5px; padding:6px 0; display:flex; gap:10px; align-items:baseline;
+    border-bottom:1px solid rgba(42,51,71,.6); }
+  .agentrow:last-child{ border-bottom:0; }
+  .agentrow b{ flex:0 0 1.9in; color:var(--green); font-size:13px; letter-spacing:.04em; }
+</style>
+</head>
+<body>
+
+<!-- 1 · TITLE -->
+<section class="slide center">
+  <div class="kicker">Splunk Agentic Ops Hackathon · Security</div>
+  <h1><span class="logo">S</span> SupplyGuard</h1>
+  <div class="sub" style="font-size:26px; max-width:9.4in;">
+    Your CI/CD pipeline added a backdoor last Tuesday.<br><span class="green">Splunk caught it — and blocked the build.</span></div>
+  <div style="margin-top:26px;">
+    <span class="pill g">Agentic Ops</span>
+    <span class="pill">HEC · SPL · Threat Intel</span>
+    <span class="pill a">MCP Server</span>
+    <span class="pill v">Hosted Models</span>
+    <span class="pill">NIS2 Article 21</span>
+  </div>
+  <div class="sub" style="margin-top:24px; font-size:17px;">Manoj Mallick&nbsp; ·&nbsp; <span class="green">LearnHubPlay BV</span></div>
+  <div class="foot"><span>SupplyGuard — Software Supply-Chain Security on Splunk</span><span>github.com/manojmallick/supplyguard</span></div>
+</section>
+
+<!-- 2 · PROBLEM -->
+<section class="slide">
+  <div class="kicker">The Problem</div>
+  <h2>Attacks enter through the <span class="poor">build pipeline</span></h2>
+  <div class="sub">XZ Utils, SolarWinds, Log4Shell — all arrived the same way: a dependency that wasn't there before, or one that silently changed.</div>
+  <div class="grid g3" style="margin-top:34px;">
+    <div class="card"><div class="big poor">~0%</div><h3>teams monitor it</h3><p>Security watches network traffic. Almost nobody watches the dependency manifest in real time.</p></div>
+    <div class="card"><div class="big amber">weeks</div><h3>to audit by hand</h3><p>A manual typosquat / CVE audit across repos takes weeks — pipelines ship hourly.</p></div>
+    <div class="card"><div class="big">1 char</div><h3>is all it takes</h3><p><span class="mono">reqursts</span> vs <span class="mono">requests</span> — one edit away from a backdoor.</p></div>
+  </div>
+  <div class="sub" style="margin-top:30px;">The pipeline is a <span class="green">net-new Splunk data source</span> — net-new detection, net-new compliance angle.</div>
+  <div class="foot"><span>The Problem</span><span>2 / 10</span></div>
+</section>
+
+<!-- 3 · SOLUTION -->
+<section class="slide">
+  <div class="kicker">The Solution</div>
+  <h2>An <span class="green">agent</span> that guards every build</h2>
+  <div class="sub">SupplyGuard ingests CI/CD events into Splunk, then closes the loop — it doesn't just flag risk, it <b>blocks the build.</b></div>
+  <div class="flow">
+    <div class="step"><b>SENSE</b>manifest diff via MCP</div><span class="arrow">→</span>
+    <div class="step"><b>DETECT</b>CVE + typosquat</div><span class="arrow">→</span>
+    <div class="step"><b>INVESTIGATE</b>foundation-sec triage</div><span class="arrow">→</span>
+    <div class="step"><b>DECIDE</b>block / PR / report</div><span class="arrow">→</span>
+    <div class="step"><b>ACT</b>+ approval gate</div><span class="arrow">→</span>
+    <div class="step"><b>LOG</b>audit + NIS2</div>
+  </div>
+  <div class="grid g2" style="margin-top:34px;">
+    <div class="card"><h3 class="green">A CI lint step stops here</h3><p>“Print a warning, exit 0.” The risky dependency still ships, and nobody correlates it across repos.</p></div>
+    <div class="card" style="border-color:var(--green)"><h3 class="green">SupplyGuard keeps going</h3><p>Triages with a Splunk hosted security model, maps cross-repo impact, and blocks the build — behind a human-approval gate.</p></div>
+  </div>
+  <div class="foot"><span>The Solution</span><span>3 / 10</span></div>
+</section>
+
+<!-- 4 · SPLUNK CAPABILITIES -->
+<section class="slide">
+  <div class="kicker">How we use Splunk</div>
+  <h2>Four Splunk capabilities, one loop</h2>
+  <table>
+    <tr><th>Capability</th><th>How SupplyGuard uses it</th><th>Prize</th></tr>
+    <tr><td><b>HEC</b></td><td>Ingestion of CI/CD events — manifests, lockfiles, build logs</td><td>Core</td></tr>
+    <tr><td><b>SPL + Threat Intel</b></td><td>CVE correlation via lookup, install-spike detection, NIS2 posture</td><td>Core</td></tr>
+    <tr><td class="amber"><b>MCP Server</b></td><td>Agent reads <span class="mono">index=cicd</span> over MCP (<span class="mono">run_splunk_query</span>, handshake)</td><td class="amber">Best Use of MCP</td></tr>
+    <tr><td class="violet"><b>Hosted Models</b></td><td><span class="mono">foundation-sec</span> classifies typosquats + writes the NIS2 note</td><td class="violet">Best Use of Models</td></tr>
+  </table>
+  <div class="sub" style="margin-top:24px;">One project, eligible for the <b>Security</b> prize + <span class="amber">two bonus prizes</span> — plus a regulatory wedge (<b>NIS2 Article 21</b>).</div>
+  <div class="foot"><span>Splunk Capabilities</span><span>4 / 10</span></div>
+</section>
+
+<!-- 5 · PROOF -->
+<section class="slide">
+  <div class="kicker">Proof — runnable in 2 seconds</div>
+  <h2>Build <span class="poor">blocked</span> before it shipped</h2>
+  <div class="sub">The agent senses a real build that added a typosquat <i>and</i> a critical-CVE dependency:</div>
+  <div class="term" style="margin-top:18px;">
+    <span class="green">SENSE</span>  · pulled 4 new/changed deps for payment-service#1247 via MCP<br>
+    <span class="poor">DETECT</span> · reqursts[typosquat:HIGH], log4j-core[cve:CRITICAL]<br>
+    <span class="violet">INVESTIGATE</span> · foundation-sec: HIGH confidence typosquat · impacts <b>3 repos</b><br>
+    <span class="amber">DECIDE</span> · block_build (approval_required=True)<br>
+    <span class="good">ACT</span>    · executed: <b class="poor">Build #1247 BLOCKED.</b> Offending: log4j-core, reqursts<br>
+    <span class="blue">LOG</span>    · decision → index=cicd (audit + NIS2 trail)
+  </div>
+  <div class="sub" style="margin-top:16px;"><span class="mono">python demo.py --auto</span> &nbsp;·&nbsp; zero network, air-gapped by default.</div>
+  <div class="foot"><span>Proof</span><span>5 / 10</span></div>
+</section>
+
+<!-- 6 · DETECTION -->
+<section class="slide">
+  <div class="kicker">The detection</div>
+  <h2>Real edit distance, real CVEs</h2>
+  <div class="sub">Typosquatting is caught with a true Levenshtein distance against a trusted-package set — computed in Python, not faked in SPL.</div>
+  <div class="grid g2" style="margin-top:36px;">
+    <div class="card" style="border-color:var(--poor)"><div class="kicker">Typosquat</div><div class="big poor">d = 1</div><p><span class="mono">reqursts</span> → <span class="mono">requests</span>. Edit-distance 1 = HIGH-confidence squat.</p></div>
+    <div class="card" style="border-color:var(--poor)"><div class="kicker">Known CVE</div><div class="big poor">9.0+</div><p><span class="mono">log4j-core 2.14</span> → CVE-2021-44228, CVSS 10.0. Auto-block threshold.</p></div>
+  </div>
+  <div class="sub" style="margin-top:30px;">Deterministic evidence first; the <span class="violet">hosted model</span> adds judgment and the compliance narrative. <span class="green">No fabricated SPL functions, no <span class="mono">join</span> anti-pattern.</span></div>
+  <div class="foot"><span>Detection</span><span>6 / 10</span></div>
+</section>
+
+<!-- 7 · ARCHITECTURE -->
+<section class="slide">
+  <div class="head">
+    <div class="kicker">Architecture</div>
+    <h2>HEC in · agent loop · block out</h2>
+  </div>
+  <div class="body">
+    <div class="arch">
+      <div class="node">CI/CD events — GitHub · GitLab · Jenkins
+        <small>manifests · lockfiles · build logs</small></div>
+      <div class="varrow">▼</div>
+      <div class="node">Collector&nbsp; →&nbsp; <b class="green">HEC</b>&nbsp; →&nbsp;
+        <span class="mono">index=cicd</span>&nbsp; →&nbsp; Splunk Enterprise / Cloud</div>
+      <div class="varrow">▼</div>
+      <div class="agentbox">
+        <div class="agentlabel">SupplyGuard Agent</div>
+        <div class="agentrow"><b>SENSE → DETECT</b><span>read <span class="mono">index=cicd</span> via <span class="amber">MCP</span> · CVE + Levenshtein typosquat</span></div>
+        <div class="agentrow"><b>INVESTIGATE</b><span><span class="violet">foundation-sec</span> triages · cross-repo impact map</span></div>
+        <div class="agentrow"><b>DECIDE → ACT</b><span>block / PR / NIS2 report&nbsp; ·&nbsp; <span class="green">human-approval gate</span></span></div>
+        <div class="agentrow"><b>LOG</b><span>audit decision&nbsp; →&nbsp; <span class="mono">index=cicd</span></span></div>
+      </div>
+      <div class="varrow">▼</div>
+      <div class="node">Build blocked&nbsp; ·&nbsp; Dashboards&nbsp; ·&nbsp; NIS2 report</div>
+    </div>
+  </div>
+  <div class="foot"><span>Architecture</span><span>7 / 10</span></div>
+</section>
+
+<!-- 8 · WHY IT WINS -->
+<section class="slide">
+  <div class="kicker">Why it wins</div>
+  <h2>Judged on four criteria</h2>
+  <div class="grid g2" style="margin-top:18px;">
+    <div class="card"><h3 class="green">Technological Implementation</h3><p>Real HEC + MCP + hosted security model + a working control loop. Runs offline in 2 seconds; both gate-modes tested.</p></div>
+    <div class="card"><h3 class="green">Quality of the Idea</h3><p>The pipeline is a data source Splunk deployments don't monitor. Net-new detection, net-new compliance angle.</p></div>
+    <div class="card"><h3 class="green">Potential Impact</h3><p>Every org shipping software has this attack surface. Catches the squat/CVE before it reaches production.</p></div>
+    <div class="card"><h3 class="green">Design</h3><p>Enterprise SOC dashboard in Dashboard Studio — risk profile, detections, agent audit trail.</p></div>
+  </div>
+  <div class="sub" style="margin-top:22px;"><b class="green">Agentic</b>, not a lint step — it <i>blocks</i>, with responsible-autonomy safeguards.</div>
+  <div class="foot"><span>Why It Wins</span><span>8 / 10</span></div>
+</section>
+
+<!-- 9 · RESPONSIBLE AUTONOMY + NIS2 -->
+<section class="slide">
+  <div class="kicker">Responsible autonomy · compliance</div>
+  <h2>It blocks — but it shows its work</h2>
+  <div class="grid g3" style="margin-top:30px;">
+    <div class="card"><h3>🔒 Approval gate</h3><p>A hard build-block waits for one human click unless explicitly autonomous.</p></div>
+    <div class="card"><h3>🧾 NIS2 evidence</h3><p>Every decision logged to Splunk and turned into an Article 21(2)(d) supply-chain note.</p></div>
+    <div class="card"><h3>🛡️ Secrets safe</h3><p>Env-only, masked in logs. Air-gapped demo with zero network calls.</p></div>
+  </div>
+  <div class="sub" style="margin-top:34px;">SupplyGuard earns trust the way a security engineer does: <b>transparent decisions, an auditable trail, a gate on anything that halts a pipeline.</b></div>
+  <div class="foot"><span>Responsible Autonomy</span><span>9 / 10</span></div>
+</section>
+
+<!-- 10 · CLOSE -->
+<section class="slide center">
+  <div class="kicker">Your supply chain, secured</div>
+  <h1>SupplyGuard</h1>
+  <div class="sub" style="font-size:24px;">Every commit. Every dependency. Every build. In Splunk.</div>
+  <div style="margin-top:24px;">
+    <span class="pill g">HEC</span><span class="pill g">SPL</span>
+    <span class="pill a">MCP Server</span><span class="pill v">Hosted Models</span>
+    <span class="pill">Dashboard Studio</span><span class="pill">NIS2</span>
+  </div>
+  <div class="sub mono" style="margin-top:30px; color:var(--green);">github.com/manojmallick/supplyguard</div>
+  <div class="foot"><span>Built on Splunk · Security Track</span><span>10 / 10</span></div>
+</section>
+
+</body>
+</html>

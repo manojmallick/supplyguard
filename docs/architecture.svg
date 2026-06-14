@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1240" height="700" viewBox="0 0 1240 700" font-family="Inter, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#65E075"/>
+    </marker>
+    <marker id="arrowDim" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L8,3 L0,6 Z" fill="#5A6B8C"/>
+    </marker>
+  </defs>
+
+  <rect width="1240" height="700" fill="#0D0F14"/>
+  <text x="40" y="50" fill="#E2E8F0" font-size="26" font-weight="700">SupplyGuard — Agentic Supply-Chain Security</text>
+  <text x="40" y="76" fill="#8B949E" font-size="15">Splunk Agentic Ops Hackathon · Security — sense → detect → investigate → decide → act → log, on Splunk</text>
+
+  <!-- CI/CD sources -->
+  <rect x="40" y="120" width="200" height="130" rx="10" fill="#151A24" stroke="#2A3555"/>
+  <text x="140" y="150" fill="#E2E8F0" font-size="15" font-weight="600" text-anchor="middle">CI/CD Events</text>
+  <text x="140" y="174" fill="#8B949E" font-size="12" text-anchor="middle">GitHub / GitLab</text>
+  <text x="140" y="192" fill="#8B949E" font-size="12" text-anchor="middle">Jenkins · Actions</text>
+  <text x="140" y="216" fill="#8B949E" font-size="12" text-anchor="middle">manifests · lockfiles</text>
+  <text x="140" y="238" fill="#65E075" font-size="11" text-anchor="middle">collector → HEC</text>
+
+  <!-- Splunk platform -->
+  <rect x="300" y="120" width="240" height="450" rx="12" fill="#0E1A12" stroke="#1E5E34"/>
+  <text x="420" y="150" fill="#65E075" font-size="16" font-weight="700" text-anchor="middle">Splunk Cloud / Enterprise</text>
+  <rect x="324" y="172" width="192" height="66" rx="8" fill="#10231A" stroke="#1E5E34"/>
+  <text x="420" y="198" fill="#E2E8F0" font-size="13" font-weight="600" text-anchor="middle">index=cicd</text>
+  <text x="420" y="218" fill="#8B949E" font-size="11" text-anchor="middle">package_manifest · build_logs</text>
+  <rect x="324" y="252" width="192" height="66" rx="8" fill="#10231A" stroke="#1E5E34"/>
+  <text x="420" y="278" fill="#E2E8F0" font-size="13" font-weight="600" text-anchor="middle">SPL + Threat Intel</text>
+  <text x="420" y="298" fill="#8B949E" font-size="11" text-anchor="middle">CVE lookup · NIS2 posture</text>
+  <rect x="324" y="332" width="192" height="66" rx="8" fill="#10231A" stroke="#1E5E34"/>
+  <text x="420" y="358" fill="#E2E8F0" font-size="13" font-weight="600" text-anchor="middle">MCP Server</text>
+  <text x="420" y="378" fill="#8B949E" font-size="11" text-anchor="middle">run_splunk_query (agent reads)</text>
+  <rect x="324" y="412" width="192" height="66" rx="8" fill="#10231A" stroke="#1E5E34"/>
+  <text x="420" y="438" fill="#E2E8F0" font-size="13" font-weight="600" text-anchor="middle">Hosted Model</text>
+  <text x="420" y="458" fill="#8B949E" font-size="11" text-anchor="middle">foundation-sec · triage + NIS2</text>
+  <rect x="324" y="492" width="192" height="60" rx="8" fill="#10231A" stroke="#1E5E34"/>
+  <text x="420" y="517" fill="#E2E8F0" font-size="13" font-weight="600" text-anchor="middle">Dashboards + Alerts</text>
+  <text x="420" y="536" fill="#8B949E" font-size="11" text-anchor="middle">Dashboard Studio · block alert</text>
+
+  <!-- Agent loop -->
+  <rect x="600" y="120" width="600" height="450" rx="12" fill="#11151F" stroke="#0A84FF"/>
+  <text x="900" y="150" fill="#0A84FF" font-size="16" font-weight="700" text-anchor="middle">SupplyGuard Agent — closed control loop (run_cycle)</text>
+
+  <rect x="630" y="176" width="240" height="58" rx="8" fill="#1C2436" stroke="#2A3555"/>
+  <text x="650" y="202" fill="#65E075" font-size="13" font-weight="700">1 · SENSE</text>
+  <text x="650" y="222" fill="#C9D2E0" font-size="11">manifest_diff() via MCP</text>
+
+  <rect x="930" y="176" width="240" height="58" rx="8" fill="#1C2436" stroke="#2A3555"/>
+  <text x="950" y="202" fill="#65E075" font-size="13" font-weight="700">2 · DETECT</text>
+  <text x="950" y="222" fill="#C9D2E0" font-size="11">CVE + Levenshtein typosquat</text>
+
+  <rect x="930" y="258" width="240" height="58" rx="8" fill="#1C2436" stroke="#2A3555"/>
+  <text x="950" y="284" fill="#65E075" font-size="13" font-weight="700">3 · INVESTIGATE</text>
+  <text x="950" y="304" fill="#C9D2E0" font-size="11">foundation-sec triage + impact</text>
+
+  <rect x="630" y="258" width="240" height="58" rx="8" fill="#1C2436" stroke="#2A3555"/>
+  <text x="650" y="284" fill="#65E075" font-size="13" font-weight="700">4 · DECIDE</text>
+  <text x="650" y="304" fill="#C9D2E0" font-size="11">block / PR / report / flag</text>
+
+  <rect x="630" y="340" width="240" height="78" rx="8" fill="#241420" stroke="#FF6B35"/>
+  <text x="650" y="366" fill="#FF9500" font-size="13" font-weight="700">5 · ACT</text>
+  <text x="650" y="386" fill="#C9D2E0" font-size="11">block_build · human gate ◄</text>
+  <text x="650" y="404" fill="#8B949E" font-size="11">requires_approval unless --auto</text>
+
+  <rect x="930" y="340" width="240" height="78" rx="8" fill="#1C2436" stroke="#2A3555"/>
+  <text x="950" y="366" fill="#65E075" font-size="13" font-weight="700">6 · LOG</text>
+  <text x="950" y="386" fill="#C9D2E0" font-size="11">decision → index=cicd</text>
+  <text x="950" y="404" fill="#8B949E" font-size="11">audit + NIS2 evidence</text>
+
+  <line x1="870" y1="205" x2="930" y2="205" stroke="#65E075" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="1050" y1="234" x2="1050" y2="258" stroke="#65E075" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="930" y1="287" x2="870" y2="287" stroke="#65E075" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="750" y1="316" x2="750" y2="340" stroke="#65E075" stroke-width="2" marker-end="url(#arrow)"/>
+  <line x1="870" y1="379" x2="930" y2="379" stroke="#FF9500" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <rect x="630" y="448" width="540" height="104" rx="8" fill="#0E1622" stroke="#163049"/>
+  <text x="650" y="476" fill="#0A84FF" font-size="13" font-weight="700">Prize-relevant Splunk surface</text>
+  <text x="650" y="500" fill="#C9D2E0" font-size="12">• Best Use of MCP Server — agent reads index=cicd via run_splunk_query (handshake)</text>
+  <text x="650" y="522" fill="#C9D2E0" font-size="12">• Best Use of Hosted Models — foundation-sec classifies typosquats + writes NIS2 note</text>
+  <text x="650" y="544" fill="#C9D2E0" font-size="12">• Security core — HEC + SPL threat-intel + Dashboard Studio + auto build-block</text>
+
+  <line x1="240" y1="195" x2="300" y2="200" stroke="#65E075" stroke-width="2" marker-end="url(#arrow)"/>
+  <text x="250" y="180" fill="#65E075" font-size="11">HEC</text>
+  <line x1="540" y1="365" x2="600" y2="290" stroke="#5A6B8C" stroke-width="2" stroke-dasharray="5,4" marker-end="url(#arrowDim)"/>
+  <text x="548" y="322" fill="#8B949E" font-size="11">MCP read</text>
+  <line x1="600" y1="520" x2="540" y2="520" stroke="#5A6B8C" stroke-width="2" stroke-dasharray="5,4" marker-end="url(#arrowDim)"/>
+  <text x="548" y="540" fill="#8B949E" font-size="11">block</text>
+
+  <text x="40" y="650" fill="#5A6B8C" font-size="12">Air-gapped demo: SUPPLYGUARD_DEMO=1 (default) runs the full loop offline. Live: SUPPLYGUARD_DEMO=0 + MCP/hosted-model tokens.</text>
+  <text x="40" y="672" fill="#5A6B8C" font-size="12">© 2026 LearnHubPlay BV · MIT License</text>
+</svg>

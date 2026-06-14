@@ -1,0 +1,141 @@
+{
+  "title": "SupplyGuard — Software Supply-Chain Security",
+  "description": "Real-time CI/CD dependency risk: new/changed packages, CVEs, typosquatting, NIS2 Article 21 posture, and the SupplyGuard agent's block/PR decisions. Import via Dashboards → Create New → Dashboard Studio → Source.",
+  "schemaVersion": "1.1",
+  "visualizations": {
+    "viz_builds_blocked": {
+      "type": "splunk.singlevalue",
+      "title": "Builds Blocked (24h)",
+      "dataSources": { "primary": "ds_builds_blocked" },
+      "options": { "majorColor": "#FF3B30", "numberPrecision": 0 }
+    },
+    "viz_cves": {
+      "type": "splunk.singlevalue",
+      "title": "CVEs Detected (24h)",
+      "dataSources": { "primary": "ds_cves" },
+      "options": { "majorColor": "> majorValue | rangeValue(cveRange)", "numberPrecision": 0 },
+      "context": {
+        "cveRange": [
+          { "to": 1, "value": "#118832" },
+          { "from": 1, "to": 5, "value": "#F1813F" },
+          { "from": 5, "value": "#D41F1F" }
+        ]
+      }
+    },
+    "viz_nis2": {
+      "type": "splunk.singlevalue",
+      "title": "NIS2 Article 21 Compliance",
+      "dataSources": { "primary": "ds_nis2" },
+      "options": {
+        "unit": "%", "unitPosition": "after", "numberPrecision": 0,
+        "majorColor": "> majorValue | rangeValue(nis2Range)"
+      },
+      "context": {
+        "nis2Range": [
+          { "to": 80, "value": "#D41F1F" },
+          { "from": 80, "to": 95, "value": "#F1813F" },
+          { "from": 95, "value": "#118832" }
+        ]
+      }
+    },
+    "viz_risk_profile": {
+      "type": "splunk.column",
+      "title": "Daily Dependency Risk Profile (7d) — clean / medium / critical",
+      "dataSources": { "primary": "ds_risk_profile" },
+      "options": { "stackMode": "stacked", "legendDisplay": "right", "yAxisTitleText": "dependencies" }
+    },
+    "viz_detections": {
+      "type": "splunk.table",
+      "title": "Recent Detections",
+      "dataSources": { "primary": "ds_detections" },
+      "options": {
+        "tableFormat": {
+          "rowBackgroundColors": "> table | seriesByName('severity') | matchValue(sevColors)"
+        }
+      },
+      "context": {
+        "sevColors": [
+          { "match": "CRITICAL", "value": "#2A0E0E" },
+          { "match": "HIGH", "value": "#2A1A0A" },
+          { "match": "MEDIUM", "value": "#1A1A0A" }
+        ]
+      }
+    },
+    "viz_agent_audit": {
+      "type": "splunk.table",
+      "title": "🤖 Agent Decision Audit Trail (sense → triage → block/PR)",
+      "dataSources": { "primary": "ds_agent_audit" },
+      "options": {}
+    }
+  },
+  "dataSources": {
+    "ds_builds_blocked": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=cicd sourcetype=supply_chain_decision action.kind=block_build result.status=executed earliest=-24h | stats dc(build_id) as blocked | fields blocked",
+        "queryParameters": { "earliest": "-24h", "latest": "now" }
+      },
+      "name": "Builds blocked"
+    },
+    "ds_cves": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=cicd sourcetype=package_manifest earliest=-24h | lookup cve_database.csv package_name as package OUTPUT cve_id | stats dc(cve_id) as cves | fields cves",
+        "queryParameters": { "earliest": "-24h", "latest": "now" }
+      },
+      "name": "CVEs detected"
+    },
+    "ds_nis2": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=cicd sourcetype=package_manifest earliest=-24h | stats count as deps, sum(eval(if(is_scanned=\"true\",1,0))) as scanned | eval pct=round(scanned/deps*100,0) | fields pct",
+        "queryParameters": { "earliest": "-24h", "latest": "now" }
+      },
+      "name": "NIS2 compliance"
+    },
+    "ds_risk_profile": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=cicd sourcetype=package_manifest | eval risk=case(max_cvss>=9,\"critical\", max_cvss>=4,\"medium\", true(),\"clean\") | timechart span=1d count by risk",
+        "queryParameters": { "earliest": "-7d@d", "latest": "now" }
+      },
+      "name": "Risk profile"
+    },
+    "ds_detections": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=cicd sourcetype=supply_chain_decision | mvexpand findings | spath input=findings | rename package as package, kind as type, severity as severity | table _time build_id package type severity action.kind | sort -_time",
+        "queryParameters": { "earliest": "-24h", "latest": "now" }
+      },
+      "name": "Recent detections"
+    },
+    "ds_agent_audit": {
+      "type": "ds.search",
+      "options": {
+        "query": "index=cicd sourcetype=supply_chain_decision | table _time status build_id action.kind result.detail nis2_note | sort -_time",
+        "queryParameters": { "earliest": "-7d@d", "latest": "now" }
+      },
+      "name": "Agent audit trail"
+    }
+  },
+  "inputs": {
+    "input_timerange": {
+      "type": "input.timerange",
+      "title": "Time range",
+      "options": { "token": "global_time", "defaultValue": "-24h,now" }
+    }
+  },
+  "layout": {
+    "type": "grid",
+    "globalInputs": ["input_timerange"],
+    "options": { "width": 1440, "height": 960 },
+    "structure": [
+      { "item": "viz_builds_blocked", "type": "block", "position": { "x": 0, "y": 0, "w": 480, "h": 220 } },
+      { "item": "viz_cves", "type": "block", "position": { "x": 480, "y": 0, "w": 480, "h": 220 } },
+      { "item": "viz_nis2", "type": "block", "position": { "x": 960, "y": 0, "w": 480, "h": 220 } },
+      { "item": "viz_risk_profile", "type": "block", "position": { "x": 0, "y": 220, "w": 1440, "h": 320 } },
+      { "item": "viz_detections", "type": "block", "position": { "x": 0, "y": 540, "w": 720, "h": 400 } },
+      { "item": "viz_agent_audit", "type": "block", "position": { "x": 720, "y": 540, "w": 720, "h": 400 } }
+    ]
+  }
+}

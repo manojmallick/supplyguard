@@ -1,0 +1,38 @@
+/* SupplyGuard — SPL analytics. index=cicd  (NO native levenshtein, NO join) */
+
+/* 1. New / changed dependencies in the last 24h (the agent senses this via MCP) */
+index=cicd sourcetype=package_manifest
+| stats earliest(_time) as first_seen, latest(_time) as last_seen, dc(build_id) as builds
+        by package, version, repository
+| where first_seen > relative_time(now(), "-24h@h")
+| eval status="NEW_OR_CHANGED"
+| table package version repository status first_seen builds
+
+/* 2. CVE correlation via lookup (replaces the original `join` anti-pattern) */
+index=cicd sourcetype=package_manifest
+| stats values(repository) as repos, dc(repository) as repo_count by package, version
+| lookup cve_database.csv package_name as package OUTPUT cve_id, severity_score as max_cvss
+| where isnotnull(cve_id)
+| sort -max_cvss
+| table package version cve_id max_cvss repo_count repos
+
+/* 3. Anomalous install spikes (eventstats, not subsearch) */
+index=cicd sourcetype=build_logs
+| rex field=_raw "(?:npm install|pip install|mvn dependency:get)\s+(?<package>[^\s]+)"
+| stats count as installs, dc(build_id) as builds, dc(developer) as developers by package, date_mday
+| eventstats avg(installs) as avg_installs by package
+| where installs > avg_installs * 3
+| eval anomaly="install spike: ".installs." vs avg ".round(avg_installs,0)
+
+/* 4. NIS2 Article 21 scan-coverage posture by repository */
+index=cicd sourcetype=package_manifest
+| stats count as dependencies, sum(eval(if(is_scanned="true",1,0))) as scanned,
+        sum(eval(if(max_cvss>7,1,0))) as high_risk by repository
+| eval coverage=round(scanned/dependencies*100,1),
+       nis2=case(coverage>=100 AND high_risk=0,"COMPLIANT", coverage>=80,"PARTIAL", true(),"NON_COMPLIANT")
+| table repository dependencies coverage high_risk nis2
+
+/* 5. Agent decision audit trail (block / PR / report) */
+index=cicd sourcetype=supply_chain_decision
+| table _time status build_id action.kind result.detail nis2_note
+| sort -_time
