@@ -200,75 +200,90 @@
     }
   },
   "layout": {
-    "type": "grid",
+    "tabs": {
+      "items": [
+        {
+          "layoutId": "layout_1",
+          "label": "Overview"
+        }
+      ]
+    },
+    "layoutDefinitions": {
+      "layout_1": {
+        "type": "absolute",
+        "options": {
+          "width": 1440,
+          "height": 980,
+          "display": "fit-to-width",
+          "backgroundColor": "transparent"
+        },
+        "structure": [
+          {
+            "item": "viz_builds_blocked",
+            "type": "block",
+            "position": {
+              "x": 0,
+              "y": 0,
+              "w": 480,
+              "h": 220
+            }
+          },
+          {
+            "item": "viz_cves",
+            "type": "block",
+            "position": {
+              "x": 480,
+              "y": 0,
+              "w": 480,
+              "h": 220
+            }
+          },
+          {
+            "item": "viz_nis2",
+            "type": "block",
+            "position": {
+              "x": 960,
+              "y": 0,
+              "w": 480,
+              "h": 220
+            }
+          },
+          {
+            "item": "viz_risk_profile",
+            "type": "block",
+            "position": {
+              "x": 0,
+              "y": 220,
+              "w": 1440,
+              "h": 320
+            }
+          },
+          {
+            "item": "viz_detections",
+            "type": "block",
+            "position": {
+              "x": 0,
+              "y": 540,
+              "w": 720,
+              "h": 400
+            }
+          },
+          {
+            "item": "viz_agent_audit",
+            "type": "block",
+            "position": {
+              "x": 720,
+              "y": 540,
+              "w": 720,
+              "h": 400
+            }
+          }
+        ]
+      }
+    },
     "globalInputs": [
       "input_timerange"
     ],
-    "options": {
-      "width": 1440,
-      "height": 960
-    },
-    "structure": [
-      {
-        "item": "viz_builds_blocked",
-        "type": "block",
-        "position": {
-          "x": 0,
-          "y": 0,
-          "w": 480,
-          "h": 220
-        }
-      },
-      {
-        "item": "viz_cves",
-        "type": "block",
-        "position": {
-          "x": 480,
-          "y": 0,
-          "w": 480,
-          "h": 220
-        }
-      },
-      {
-        "item": "viz_nis2",
-        "type": "block",
-        "position": {
-          "x": 960,
-          "y": 0,
-          "w": 480,
-          "h": 220
-        }
-      },
-      {
-        "item": "viz_risk_profile",
-        "type": "block",
-        "position": {
-          "x": 0,
-          "y": 220,
-          "w": 1440,
-          "h": 320
-        }
-      },
-      {
-        "item": "viz_detections",
-        "type": "block",
-        "position": {
-          "x": 0,
-          "y": 540,
-          "w": 720,
-          "h": 400
-        }
-      },
-      {
-        "item": "viz_agent_audit",
-        "type": "block",
-        "position": {
-          "x": 720,
-          "y": 540,
-          "w": 720,
-          "h": 400
-        }
-      }
-    ]
+    "options": {}
   }
 }
