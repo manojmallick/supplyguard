@@ -28,6 +28,8 @@ build** — generating an NIS2 Article 21 evidence trail as it goes.
 
 ## Why this is *agentic ops*, not a CI lint step
 
+![SupplyGuard architecture — CI/CD → HEC → Splunk; agent senses via MCP, triages with a hosted model, blocks the build](architecture_diagram.png)
+
 ```
    CI/CD events                ┌──────────────── SupplyGuard Agent ───────────────┐
  (GitHub/GitLab/Jenkins)       │ 1. SENSE       manifest diff ← Splunk MCP Server │
