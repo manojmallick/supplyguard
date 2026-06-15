@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>SupplyGuard | Supply Chain Security Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            background-color: #0D0F14;
+            color: #e2e2e9;
+            font-family: 'Inter', sans-serif;
+        }
+        .glow-pill {
+            position: relative;
+            overflow: hidden;
+        }
+        .glow-pill::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: currentColor;
+            opacity: 0.1;
+        }
+        .severity-critical { border-left: 4px solid #ffb4ab; }
+        .severity-high { border-left: 4px solid #ffb4ab; }
+        .severity-medium { border-left: 4px solid #bfc7df; }
+        .severity-low { border-left: 4px solid #82fd8e; }
+        
+        /* Custom scrollbar for technical feel */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #111318; }
+        ::-webkit-scrollbar-thumb { background: #2A3555; border-radius: 3px; }
+        
+        .glass-panel {
+            background: #1C2436;
+            border: 1px solid #2A3555;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "outline": "#879484",
+                      "on-secondary-fixed-variant": "#00468d",
+                      "error": "#ffb4ab",
+                      "tertiary-fixed-dim": "#bec6de",
+                      "on-secondary-container": "#002957",
+                      "on-primary-fixed": "#002106",
+                      "inverse-primary": "#006e26",
+                      "secondary-fixed": "#d6e3ff",
+                      "surface-container-lowest": "#0c0e13",
+                      "secondary-container": "#3e90ff",
+                      "surface-container-highest": "#33353a",
+                      "surface-bright": "#37393f",
+                      "primary-fixed": "#81fc8d",
+                      "primary": "#82fd8e",
+                      "on-tertiary-fixed": "#131b2d",
+                      "surface-container-high": "#282a2f",
+                      "on-error": "#690005",
+                      "surface-container": "#1e1f25",
+                      "on-primary": "#003910",
+                      "on-secondary-fixed": "#001b3e",
+                      "tertiary": "#dbe3fc",
+                      "on-background": "#e2e2e9",
+                      "surface-variant": "#33353a",
+                      "surface-container-low": "#1a1b21",
+                      "primary-fixed-dim": "#64df74",
+                      "background": "#111318",
+                      "on-tertiary-fixed-variant": "#3f475a",
+                      "error-container": "#93000a",
+                      "primary-container": "#65e075",
+                      "on-primary-container": "#006120",
+                      "outline-variant": "#3e4a3c",
+                      "inverse-surface": "#e2e2e9",
+                      "secondary-fixed-dim": "#aac7ff",
+                      "on-primary-fixed-variant": "#00531a",
+                      "surface": "#111318",
+                      "on-tertiary-container": "#4b5367",
+                      "tertiary-fixed": "#dae2fb",
+                      "surface-dim": "#111318",
+                      "on-tertiary": "#283043",
+                      "on-surface": "#e2e2e9",
+                      "on-error-container": "#ffdad6",
+                      "on-secondary": "#003064",
+                      "secondary": "#aac7ff",
+                      "surface-tint": "#64df74",
+                      "tertiary-container": "#bfc7df",
+                      "on-surface-variant": "#bdcab9",
+                      "inverse-on-surface": "#2e3036"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "element-gap-md": "16px",
+                      "element-gap-sm": "8px",
+                      "column-gutter": "20px",
+                      "unit": "4px",
+                      "element-gap-xs": "4px",
+                      "sidebar-width": "260px",
+                      "container-padding": "24px"
+              },
+              "fontFamily": {
+                      "mono-label": ["JetBrains Mono"],
+                      "mono-data": ["JetBrains Mono"],
+                      "display-lg": ["Inter"],
+                      "body-sm": ["Inter"],
+                      "body-md": ["Inter"],
+                      "headline-lg-mobile": ["Inter"],
+                      "headline-md": ["Inter"],
+                      "title-sm": ["Inter"]
+              },
+              "fontSize": {
+                      "mono-label": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                      "mono-data": ["13px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "display-lg": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "body-sm": ["12px", {"lineHeight": "18px", "fontWeight": "400"}],
+                      "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                      "headline-md": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "title-sm": ["16px", {"lineHeight": "24px", "fontWeight": "600"}]
+              }
+            },
+          },
+        }
+    </script>
+</head>
+<body class="flex min-h-screen">
+<!-- SideNavBar (Shared Component) -->
+<nav class="fixed left-0 top-0 h-full flex flex-col pt-20 pb-4 w-sidebar-width bg-surface-container-low border-r border-outline-variant z-40 hidden md:flex">
+<div class="px-6 mb-8">
+<h2 class="font-title-sm text-title-sm text-primary">Security Operations</h2>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-widest font-mono-label">SupplyGuard SOC</p>
+</div>
+<div class="flex-1 space-y-1">
+<a class="group flex items-center px-6 py-3 gap-element-gap-sm text-primary bg-primary-container/20 border-r-2 border-primary transition-all" href="dashboard.html">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="font-mono-label text-mono-label">Dashboard</span>
+</a>
+<a class="group flex items-center px-6 py-3 gap-element-gap-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest/50 transition-all" href="cve_investigation.html">
+<span class="material-symbols-outlined">security</span>
+<span class="font-mono-label text-mono-label">CVE Investigations</span>
+</a>
+<a class="group flex items-center px-6 py-3 gap-element-gap-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest/50 transition-all" href="nis2_report.html">
+<span class="material-symbols-outlined">assignment</span>
+<span class="font-mono-label text-mono-label">Compliance Reports</span>
+</a>
+<a class="group flex items-center px-6 py-3 gap-element-gap-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest/50 transition-all" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-mono-label text-mono-label">Repository Management</span>
+</a>
+<a class="group flex items-center px-6 py-3 gap-element-gap-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest/50 transition-all" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-mono-label text-mono-label">Settings</span>
+</a>
+</div>
+<div class="mt-auto px-6 space-y-1">
+<a class="group flex items-center py-2 gap-element-gap-sm text-on-surface-variant hover:text-on-surface" href="#">
+<span class="material-symbols-outlined text-sm">contact_support</span>
+<span class="font-mono-label text-[11px]">Support</span>
+</a>
+<a class="group flex items-center py-2 gap-element-gap-sm text-on-surface-variant hover:text-on-surface" href="#">
+<span class="material-symbols-outlined text-sm">menu_book</span>
+<span class="font-mono-label text-[11px]">Documentation</span>
+</a>
+</div>
+</nav>
+<!-- TopNavBar (Shared Component) -->
+<header class="flex justify-between items-center w-full px-container-padding h-16 fixed top-0 z-50 bg-surface-container border-b border-outline-variant">
+<div class="flex items-center gap-6">
+<span class="font-headline-md text-headline-md font-extrabold text-primary tracking-tighter">SupplyGuard</span>
+<div class="hidden lg:flex items-center gap-2 px-3 py-1 bg-primary/10 border border-primary/20 rounded">
+<span class="material-symbols-outlined text-[16px] text-primary" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+<span class="font-mono-label text-[10px] text-primary uppercase">NIS2 Article 21 Compliant</span>
+</div>
+</div>
+<div class="flex items-center gap-element-gap-md">
+<div class="hidden sm:flex flex-col items-end mr-4">
+<span class="font-mono-data text-[11px] text-on-surface">47 repos monitored</span>
+<span class="font-mono-data text-[10px] text-on-surface-variant">Last scan: 3 min ago</span>
+</div>
+<div class="flex items-center gap-3">
+<button class="p-2 text-on-surface-variant hover:bg-surface-bright/10 transition-colors cursor-pointer">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-bright/10 transition-colors cursor-pointer">
+<span class="material-symbols-outlined">help</span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-bright/10 transition-colors cursor-pointer">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-container-highest border border-outline-variant flex items-center justify-center overflow-hidden">
+<img alt="Security Analyst Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-2xF_MEZZrLq2mVVYlDeIAdtxs4rxSxHTPU1Oc8b23sE6347FSsE2NrURBICAppbpLtZ01AKuwOZIvdX5kbz46WhkoaYEXVrlJYcDU9Pyhi25lNV-46OOSxuSEa8shLifSNtG39yV2m00BJqxKst3vUBCiTzzeIecLurFhmemwuCRzNa2_hJPhxKmRMKgzUjzzwDC2D_q-7DY3Kah4QDZoYFx1LcxY5dFhWGdoTsF3DCWUMVUK47JGWis2onqrRujYpM2v87T9TGd"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 ml-0 md:ml-sidebar-width pt-16 p-container-padding space-y-6">
+<!-- Risk Score Banner -->
+<section class="bg-error-container/20 border border-error/30 rounded-lg p-4 flex flex-col md:flex-row items-center justify-between gap-4 animate-pulse-slow">
+<div class="flex items-center gap-4">
+<div class="bg-error p-2 rounded flex items-center justify-center text-on-error">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">warning</span>
+</div>
+<div>
+<h3 class="font-title-sm text-title-sm text-error flex items-center gap-2">
+                        ACTIVE RISK DETECTED
+                        <span class="font-mono-data text-xs bg-error/10 px-2 border border-error/30">CRITICAL SEVERITY</span>
+</h3>
+<p class="font-mono-data text-mono-data text-on-surface-variant">
+<span class="text-error font-bold">suspicious-package@2.1.3</span> — typosquatting of 'requests'. Detected in: <span class="text-on-surface">payment-service</span> build <span class="underline">#1247</span> at 14:32 CET
+                    </p>
+</div>
+</div>
+<div class="flex gap-2 w-full md:w-auto">
+<button class="flex-1 md:flex-none px-4 py-2 border border-outline-variant hover:bg-surface-bright/10 text-on-surface font-mono-label text-sm transition-all">View Details</button>
+<button class="flex-1 md:flex-none px-4 py-2 bg-error text-on-error font-mono-label text-sm font-bold hover:brightness-110 transition-all">Block Build</button>
+</div>
+</section>
+<!-- Stats Row -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-element-gap-md">
+<div class="glass-panel p-4 rounded-lg flex flex-col justify-between h-32">
+<div class="flex justify-between items-start">
+<span class="text-on-surface-variant font-mono-label text-[11px] uppercase">Repos Scanned</span>
+<span class="material-symbols-outlined text-primary text-xl">check_circle</span>
+</div>
+<div>
+<div class="text-display-lg font-display-lg text-on-surface">47<span class="text-headline-md text-on-surface-variant">/47</span></div>
+<div class="w-full bg-surface-container-highest h-1 rounded-full mt-2">
+<div class="bg-primary h-full rounded-full" style="width: 100%"></div>
+</div>
+</div>
+</div>
+<div class="glass-panel p-4 rounded-lg flex flex-col justify-between h-32">
+<div class="flex justify-between items-start">
+<span class="text-on-surface-variant font-mono-label text-[11px] uppercase">New Dependencies</span>
+<span class="material-symbols-outlined text-secondary text-xl">inventory</span>
+</div>
+<div>
+<div class="text-display-lg font-display-lg text-on-surface">12</div>
+<div class="text-[10px] text-secondary font-mono-data flex items-center gap-1">
+<span class="material-symbols-outlined text-[12px]">trending_up</span> 4 since yesterday
+                    </div>
+</div>
+</div>
+<div class="glass-panel p-4 rounded-lg flex flex-col justify-between h-32">
+<div class="flex justify-between items-start">
+<span class="text-on-surface-variant font-mono-label text-[11px] uppercase">CVEs Detected</span>
+<span class="material-symbols-outlined text-tertiary-container text-xl">gpp_maybe</span>
+</div>
+<div>
+<div class="text-display-lg font-display-lg text-on-surface">3</div>
+<div class="flex gap-2 mt-1">
+<span class="text-[10px] font-mono-data px-1.5 bg-error-container text-on-error-container rounded">1 Critical</span>
+<span class="text-[10px] font-mono-data px-1.5 bg-orange-900/50 text-orange-200 rounded border border-orange-700/50">1 High</span>
+<span class="text-[10px] font-mono-data px-1.5 bg-tertiary-container/20 text-tertiary-container rounded border border-tertiary-container/30">1 Med</span>
+</div>
+</div>
+</div>
+<div class="glass-panel p-4 rounded-lg flex flex-col justify-between h-32">
+<div class="flex justify-between items-start">
+<span class="text-on-surface-variant font-mono-label text-[11px] uppercase">NIS2 Compliance</span>
+<span class="material-symbols-outlined text-primary text-xl">verified</span>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative w-16 h-16">
+<svg class="w-full h-full" viewbox="0 0 36 36">
+<path class="text-surface-container-highest" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="transparent" stroke="currentColor" stroke-width="3"></path>
+<path class="text-primary" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="transparent" stroke="currentColor" stroke-dasharray="94, 100" stroke-linecap="round" stroke-width="3"></path>
+</svg>
+<div class="absolute inset-0 flex items-center justify-center text-[13px] font-bold text-primary">94%</div>
+</div>
+<div class="text-[10px] text-on-surface-variant font-mono-label leading-tight">
+                        Awaiting <br/> Access Control <br/> Audit
+                    </div>
+</div>
+</div>
+</div>
+<!-- Recent Detections Table -->
+<section class="glass-panel rounded-lg overflow-hidden">
+<div class="px-6 py-4 border-b border-outline-variant flex justify-between items-center">
+<h3 class="font-title-sm text-title-sm">Recent Supply Chain Events</h3>
+<button class="text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1 font-mono-label text-[11px]">
+<span class="material-symbols-outlined text-sm">filter_list</span> FILTER VIEW
+                </button>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full border-collapse">
+<thead class="bg-surface-container-low border-b border-outline-variant">
+<tr>
+<th class="px-6 py-3 text-left font-mono-label text-[10px] text-on-surface-variant uppercase tracking-wider">Time</th>
+<th class="px-6 py-3 text-left font-mono-label text-[10px] text-on-surface-variant uppercase tracking-wider">Repo</th>
+<th class="px-6 py-3 text-left font-mono-label text-[10px] text-on-surface-variant uppercase tracking-wider">Package</th>
+<th class="px-6 py-3 text-left font-mono-label text-[10px] text-on-surface-variant uppercase tracking-wider">Type</th>
+<th class="px-6 py-3 text-left font-mono-label text-[10px] text-on-surface-variant uppercase tracking-wider">Severity</th>
+<th class="px-6 py-3 text-left font-mono-label text-[10px] text-on-surface-variant uppercase tracking-wider">Build</th>
+<th class="px-6 py-3 text-right font-mono-label text-[10px] text-on-surface-variant uppercase tracking-wider">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-bright/5 transition-colors severity-high">
+<td class="px-6 py-3 font-mono-data text-mono-data text-on-surface">14:32</td>
+<td class="px-6 py-3 font-mono-data text-mono-data text-on-surface">payment-svc</td>
+<td class="px-6 py-3 font-mono-data text-mono-data text-on-surface">suspicious-package</td>
+<td class="px-6 py-3 font-mono-data text-mono-data text-on-surface">Typosquatting</td>
+<td class="px-6 py-3">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-error-container/40 text-error border border-error/50 uppercase">High</span>
+</td>
+<td class="px-6 py-3 font-mono-data text-mono-data text-on-surface-variant">#1247</td>
+<td class="px-6 py-3 text-right">
+<span class="font-mono-label text-[10px] text-error font-bold px-2 py-1 bg-error/10 rounded">BLOCKED</span>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-bright/5 transition-colors severity-critical">
+<td class="px-6 py-3 font-mono-data text-mono-data text-on-surface">13:15</td>
+<td class="px-6 py-3 font-mono-data text-mono-data text-on-surface">auth-svc</td>
+<td class="px-6 py-3 font-mono-data text-mono-data text-on-surface">log4j-core:2.14</td>
+<td class="px-6 py-3 font-mono-data text-mono-data text-on-surface">Known CVE</td>
+<td class="px-6 py-3">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-error text-on-error uppercase">Critical</span>
+</td>
+<td class="px-6 py-3 font-mono-data text-mono-data text-on-surface-variant">#1244</td>
+<td class="px-6 py-3 text-right">
+<span class="font-mono-label text-[10px] text-error font-bold px-2 py-1 bg-error/10 rounded">BLOCKED</span>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-bright/5 transition-colors severity-medium">
+<td class="px-6 py-3 font-mono-data text-mono-data text-on-surface">11:47</td>
+<td class="px-6 py-3 font-mono-data text-mono-data text-on-surface">api-gateway</td>
+<td class="px-6 py-3 font-mono-data text-mono-data text-on-surface">lodash@4.17.20</td>
+<td class="px-6 py-3 font-mono-data text-mono-data text-on-surface">Updated CVE</td>
+<td class="px-6 py-3">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-tertiary-container/40 text-tertiary-container border border-tertiary-container/50 uppercase">Medium</span>
+</td>
+<td class="px-6 py-3 font-mono-data text-mono-data text-on-surface-variant">#1239</td>
+<td class="px-6 py-3 text-right">
+<span class="font-mono-label text-[10px] text-tertiary-container font-bold px-2 py-1 bg-tertiary-container/10 rounded">FLAGGED</span>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-bright/5 transition-colors severity-low">
+<td class="px-6 py-3 font-mono-data text-mono-data text-on-surface">09:22</td>
+<td class="px-6 py-3 font-mono-data text-mono-data text-on-surface">frontend</td>
+<td class="px-6 py-3 font-mono-data text-mono-data text-on-surface">react@18.3.1</td>
+<td class="px-6 py-3 font-mono-data text-mono-data text-on-surface">New dep</td>
+<td class="px-6 py-3">
+<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-primary-container/40 text-primary border border-primary/50 uppercase">Low</span>
+</td>
+<td class="px-6 py-3 font-mono-data text-mono-data text-on-surface-variant">#1231</td>
+<td class="px-6 py-3 text-right">
+<span class="font-mono-label text-[10px] text-primary font-bold px-2 py-1 bg-primary/10 rounded">CLEARED</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- Dependency Trend Chart Area -->
+<section class="glass-panel p-6 rounded-lg">
+<div class="flex justify-between items-center mb-6">
+<div>
+<h3 class="font-title-sm text-title-sm">Daily Dependency Risk Profile</h3>
+<p class="text-on-surface-variant font-mono-data text-xs">7-day lookback of identified risks vs resolved assets</p>
+</div>
+<div class="flex items-center gap-4 text-[10px] font-mono-label uppercase">
+<div class="flex items-center gap-1.5"><span class="w-3 h-3 bg-error rounded-full"></span> Critical</div>
+<div class="flex items-center gap-1.5"><span class="w-3 h-3 bg-tertiary-container rounded-full"></span> Medium</div>
+<div class="flex items-center gap-1.5"><span class="w-3 h-3 bg-primary rounded-full"></span> Secure</div>
+</div>
+</div>
+<!-- Technical Stacked Bar Chart Mockup -->
+<div class="h-64 w-full flex items-end gap-3 px-2">
+<!-- Mon -->
+<div class="flex-1 flex flex-col justify-end gap-0.5 group">
+<div class="w-full bg-error h-1/4 opacity-80 group-hover:opacity-100 transition-opacity"></div>
+<div class="w-full bg-tertiary-container h-1/4 opacity-80 group-hover:opacity-100 transition-opacity"></div>
+<div class="w-full bg-primary h-1/2 opacity-80 group-hover:opacity-100 transition-opacity"></div>
+<span class="text-[10px] text-on-surface-variant font-mono-label mt-2 text-center">MON</span>
+</div>
+<!-- Tue -->
+<div class="flex-1 flex flex-col justify-end gap-0.5 group">
+<div class="w-full bg-error h-[10%] opacity-80 group-hover:opacity-100 transition-opacity"></div>
+<div class="w-full bg-tertiary-container h-[20%] opacity-80 group-hover:opacity-100 transition-opacity"></div>
+<div class="w-full bg-primary h-[70%] opacity-80 group-hover:opacity-100 transition-opacity"></div>
+<span class="text-[10px] text-on-surface-variant font-mono-label mt-2 text-center">TUE</span>
+</div>
+<!-- Wed -->
+<div class="flex-1 flex flex-col justify-end gap-0.5 group">
+<div class="w-full bg-error h-[30%] opacity-80 group-hover:opacity-100 transition-opacity"></div>
+<div class="w-full bg-tertiary-container h-[30%] opacity-80 group-hover:opacity-100 transition-opacity"></div>
+<div class="w-full bg-primary h-[40%] opacity-80 group-hover:opacity-100 transition-opacity"></div>
+<span class="text-[10px] text-on-surface-variant font-mono-label mt-2 text-center">WED</span>
+</div>
+<!-- Thu -->
+<div class="flex-1 flex flex-col justify-end gap-0.5 group">
+<div class="w-full bg-error h-[5%] opacity-80 group-hover:opacity-100 transition-opacity"></div>
+<div class="w-full bg-tertiary-container h-[15%] opacity-80 group-hover:opacity-100 transition-opacity"></div>
+<div class="w-full bg-primary h-[80%] opacity-80 group-hover:opacity-100 transition-opacity"></div>
+<span class="text-[10px] text-on-surface-variant font-mono-label mt-2 text-center">THU</span>
+</div>
+<!-- Fri -->
+<div class="flex-1 flex flex-col justify-end gap-0.5 group">
+<div class="w-full bg-error h-[15%] opacity-80 group-hover:opacity-100 transition-opacity"></div>
+<div class="w-full bg-tertiary-container h-[10%] opacity-80 group-hover:opacity-100 transition-opacity"></div>
+<div class="w-full bg-primary h-[75%] opacity-80 group-hover:opacity-100 transition-opacity"></div>
+<span class="text-[10px] text-on-surface-variant font-mono-label mt-2 text-center">FRI</span>
+</div>
+<!-- Sat -->
+<div class="flex-1 flex flex-col justify-end gap-0.5 group">
+<div class="w-full bg-error h-[2%] opacity-80 group-hover:opacity-100 transition-opacity"></div>
+<div class="w-full bg-tertiary-container h-[8%] opacity-80 group-hover:opacity-100 transition-opacity"></div>
+<div class="w-full bg-primary h-[90%] opacity-80 group-hover:opacity-100 transition-opacity"></div>
+<span class="text-[10px] text-on-surface-variant font-mono-label mt-2 text-center">SAT</span>
+</div>
+<!-- Sun (Current) -->
+<div class="flex-1 flex flex-col justify-end gap-0.5 group relative">
+<div class="absolute -top-6 left-1/2 -translate-x-1/2 bg-surface-bright px-1 text-[9px] text-primary border border-primary/30">LATEST</div>
+<div class="w-full bg-error h-[1%] opacity-80 group-hover:opacity-100 transition-opacity"></div>
+<div class="w-full bg-tertiary-container h-[4%] opacity-80 group-hover:opacity-100 transition-opacity"></div>
+<div class="w-full bg-primary h-[95%] opacity-100"></div>
+<span class="text-[10px] text-primary font-mono-label font-bold mt-2 text-center">SUN</span>
+</div>
+</div>
+<div class="mt-8 border-t border-outline-variant pt-4 flex items-center justify-between">
+<div class="flex gap-8">
+<div>
+<p class="text-[10px] text-on-surface-variant font-mono-label uppercase">Mean Time To Detection</p>
+<p class="font-mono-data text-primary text-sm">4.2 Minutes</p>
+</div>
+<div>
+<p class="text-[10px] text-on-surface-variant font-mono-label uppercase">Auto-Remediated</p>
+<p class="font-mono-data text-primary text-sm">88.4%</p>
+</div>
+</div>
+<button class="flex items-center gap-2 bg-primary/10 border border-primary/30 text-primary px-4 py-2 font-mono-label text-xs hover:bg-primary/20 transition-all">
+<span class="material-symbols-outlined text-sm">download</span> EXPORT REPORT
+                </button>
+</div>
+</section>
+</main>
+<!-- Bottom Nav for Mobile -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full h-16 bg-surface-container border-t border-outline-variant flex items-center justify-around px-4 z-50">
+<button class="flex flex-col items-center gap-1 text-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">dashboard</span>
+<span class="text-[10px] font-mono-label">Dash</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">security</span>
+<span class="text-[10px] font-mono-label">CVEs</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">assignment</span>
+<span class="text-[10px] font-mono-label">Audit</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-on-surface-variant">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="text-[10px] font-mono-label">Repos</span>
+</button>
+</nav>
+<script>
+        // Simple interactive hover effects for table rows
+        document.querySelectorAll('tr').forEach(row => {
+            row.addEventListener('mouseenter', () => {
+                row.classList.add('scale-[1.002]');
+            });
+            row.addEventListener('mouseleave', () => {
+                row.classList.remove('scale-[1.002]');
+            });
+        });
+    </script>
+</body></html>

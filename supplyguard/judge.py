@@ -1,4 +1,4 @@
-# © 2026 LearnHubPlay BV. SupplyGuard.
+# © 2026 Manoj Mallick. SupplyGuard.
 """Security triage backed by a Splunk hosted model (Foundation-sec).
 
 This is the AI layer the original plan only *claimed*. A Splunk hosted security

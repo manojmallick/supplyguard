@@ -1,4 +1,4 @@
-# © 2026 LearnHubPlay BV. SupplyGuard.
+# © 2026 Manoj Mallick. SupplyGuard.
 """Deterministic supply-chain analysis: CVE lookup + typosquatting.
 
 This is the *non-AI* evidence layer. It runs in pure Python with no native-SPL

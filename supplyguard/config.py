@@ -1,4 +1,4 @@
-# © 2026 LearnHubPlay BV. SupplyGuard.
+# © 2026 Manoj Mallick. SupplyGuard.
 """Configuration. All secrets come from the environment — never hardcoded."""
 
 from __future__ import annotations

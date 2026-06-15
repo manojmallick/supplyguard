@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CVE Investigation | SupplyGuard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "outline": "#879484",
+                        "on-secondary-fixed-variant": "#00468d",
+                        "error": "#ffb4ab",
+                        "tertiary-fixed-dim": "#bec6de",
+                        "on-secondary-container": "#002957",
+                        "on-primary-fixed": "#002106",
+                        "inverse-primary": "#006e26",
+                        "secondary-fixed": "#d6e3ff",
+                        "surface-container-lowest": "#0c0e13",
+                        "secondary-container": "#3e90ff",
+                        "surface-container-highest": "#33353a",
+                        "surface-bright": "#37393f",
+                        "primary-fixed": "#81fc8d",
+                        "primary": "#82fd8e",
+                        "on-tertiary-fixed": "#131b2d",
+                        "surface-container-high": "#282a2f",
+                        "on-error": "#690005",
+                        "surface-container": "#1e1f25",
+                        "on-primary": "#003910",
+                        "on-secondary-fixed": "#001b3e",
+                        "tertiary": "#dbe3fc",
+                        "on-background": "#e2e2e9",
+                        "surface-variant": "#33353a",
+                        "surface-container-low": "#1a1b21",
+                        "primary-fixed-dim": "#64df74",
+                        "background": "#111318",
+                        "on-tertiary-fixed-variant": "#3f475a",
+                        "error-container": "#93000a",
+                        "primary-container": "#65e075",
+                        "on-primary-container": "#006120",
+                        "outline-variant": "#3e4a3c",
+                        "inverse-surface": "#e2e2e9",
+                        "secondary-fixed-dim": "#aac7ff",
+                        "on-primary-fixed-variant": "#00531a",
+                        "surface": "#111318",
+                        "on-tertiary-container": "#4b5367",
+                        "tertiary-fixed": "#dae2fb",
+                        "surface-dim": "#111318",
+                        "on-tertiary": "#283043",
+                        "on-surface": "#e2e2e9",
+                        "on-error-container": "#ffdad6",
+                        "on-secondary": "#003064",
+                        "secondary": "#aac7ff",
+                        "surface-tint": "#64df74",
+                        "tertiary-container": "#bfc7df",
+                        "on-surface-variant": "#bdcab9",
+                        "inverse-on-surface": "#2e3036"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "element-gap-md": "16px",
+                        "element-gap-sm": "8px",
+                        "column-gutter": "20px",
+                        "unit": "4px",
+                        "element-gap-xs": "4px",
+                        "sidebar-width": "260px",
+                        "container-padding": "24px"
+                    },
+                    "fontFamily": {
+                        "mono-label": ["JetBrains Mono"],
+                        "mono-data": ["JetBrains Mono"],
+                        "display-lg": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "headline-lg-mobile": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "title-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "mono-label": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                        "mono-data": ["13px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "display-lg": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-sm": ["12px", {"lineHeight": "18px", "fontWeight": "400"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                        "headline-md": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "title-sm": ["16px", {"lineHeight": "24px", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            background-color: #0D0F14;
+            color: #e2e2e9;
+            font-family: 'Inter', sans-serif;
+        }
+        .technical-card {
+            background-color: #1C2436;
+            border: 1px solid #2A3555;
+        }
+        .severity-glow-critical {
+            box-shadow: 0 0 15px rgba(255, 180, 171, 0.15);
+            border-left: 4px solid #ffb4ab;
+        }
+        .impact-node {
+            background: #151A24;
+            border: 1px solid #2A3555;
+            transition: all 0.2s ease;
+        }
+        .impact-node:hover {
+            border-color: #82fd8e;
+            box-shadow: 0 0 10px rgba(130, 253, 142, 0.1);
+        }
+        .connection-line {
+            stroke: #2A3555;
+            stroke-width: 1;
+            fill: none;
+        }
+        .pulse-critical {
+            animation: pulse-red 2s infinite;
+        }
+        @keyframes pulse-red {
+            0% { box-shadow: 0 0 0 0 rgba(255, 180, 171, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 180, 171, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 180, 171, 0); }
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden">
+<!-- TopNavBar -->
+<nav class="flex justify-between items-center w-full px-container-padding h-16 fixed top-0 z-50 bg-surface-container dark:bg-surface-container border-b border-outline-variant">
+<div class="flex items-center gap-element-gap-md">
+<span class="font-headline-md text-headline-md font-bold text-primary dark:text-primary">SupplyGuard</span>
+<div class="hidden md:flex h-8 w-64 bg-surface-container-low items-center px-3 rounded-lg border border-outline-variant">
+<span class="material-symbols-outlined text-on-surface-variant text-sm">search</span>
+<span class="text-on-surface-variant font-body-md ml-2">Search vulnerability index...</span>
+</div>
+</div>
+<div class="flex items-center gap-element-gap-md">
+<span class="material-symbols-outlined text-primary-fixed dark:text-primary-fixed-dim cursor-pointer hover:bg-surface-bright/10 p-2 rounded transition-colors">notifications</span>
+<span class="material-symbols-outlined text-primary-fixed dark:text-primary-fixed-dim cursor-pointer hover:bg-surface-bright/10 p-2 rounded transition-colors">help</span>
+<span class="material-symbols-outlined text-primary-fixed dark:text-primary-fixed-dim cursor-pointer hover:bg-surface-bright/10 p-2 rounded transition-colors">settings</span>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-primary">
+<img alt="Security Analyst Profile" data-alt="A professional headshot of a cybersecurity analyst in a high-tech monitoring center. The analyst is focused, with a subtle blue digital glow from nearby screens reflecting on their face. The environment is dark and technical, characterized by sophisticated monitoring equipment and a minimalist, authoritative aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAlhxUgc1bHKGxAWL0QxpXq-0qXbRGa0lSj0siF6Gu7VuCHh3rR--mBsYQMdtY687pVL-hLxtSb0xTccRPpZMFsNeM5_SVCWkIMsJbyFPbJoxj3Mg3Ff9S2e7IhgSrBGuuVfM7WFwNMJarab6nxaa7rN4MaW2nD5EluQeWnBIl0RVcrfCD18aPuOW38pCr3t4ItWj9SpKufanSh2RttwzfnbGR46Ryz-A4lB29NqRMbFSnDZ2uEpPVgSz655fuO_XssZKiiU-AjtPO1"/>
+</div>
+</div>
+</nav>
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full flex flex-col pt-20 pb-4 w-sidebar-width bg-surface-container-low dark:bg-surface-container-low border-r border-outline-variant z-40 hidden md:flex">
+<div class="px-4 mb-8">
+<h2 class="font-title-sm text-title-sm text-primary">Security Operations</h2>
+<p class="font-mono-label text-mono-label text-on-surface-variant">SupplyGuard SOC</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="group flex items-center px-4 py-3 gap-element-gap-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest/50 transition-all" href="dashboard.html">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-mono-label text-mono-label">Dashboard</span>
+</a>
+<a class="group flex items-center px-4 py-3 gap-element-gap-sm text-primary bg-primary-container/20 border-r-2 border-primary transition-all" href="cve_investigation.html">
+<span class="material-symbols-outlined">security</span>
+<span class="font-mono-label text-mono-label">CVE Investigations</span>
+</a>
+<a class="group flex items-center px-4 py-3 gap-element-gap-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest/50 transition-all" href="nis2_report.html">
+<span class="material-symbols-outlined">assignment</span>
+<span class="font-mono-label text-mono-label">Compliance Reports</span>
+</a>
+<a class="group flex items-center px-4 py-3 gap-element-gap-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest/50 transition-all" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-mono-label text-mono-label">Repository Management</span>
+</a>
+<a class="group flex items-center px-4 py-3 gap-element-gap-sm text-on-surface-variant hover:text-on-surface hover:bg-surface-container-highest/50 transition-all" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-mono-label text-mono-label">Settings</span>
+</a>
+</nav>
+<div class="mt-auto border-t border-outline-variant pt-4">
+<a class="group flex items-center px-4 py-3 gap-element-gap-sm text-on-surface-variant hover:text-on-surface" href="#">
+<span class="material-symbols-outlined">contact_support</span>
+<span class="font-mono-label text-mono-label">Support</span>
+</a>
+<a class="group flex items-center px-4 py-3 gap-element-gap-sm text-on-surface-variant hover:text-on-surface" href="#">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="font-mono-label text-mono-label">Documentation</span>
+</a>
+</div>
+</aside>
+<!-- Main Content -->
+<main class="md:ml-sidebar-width mt-16 p-container-padding min-h-screen">
+<!-- Header Section -->
+<header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+<div>
+<h1 class="font-display-lg text-display-lg text-on-surface flex items-center gap-3">
+                    CVE-2024-45XXX — Critical Vulnerability
+                    <span class="bg-error-container text-on-error-container px-2 py-0.5 rounded text-mono-label font-mono-label flex items-center gap-1">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span> CRITICAL
+                    </span>
+</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">
+                    Package: <span class="font-mono-data text-mono-data text-primary">log4j-core:2.14.0</span> | CVSS: <span class="font-mono-data text-mono-data font-bold">9.8</span> | Found in: <span class="text-on-surface">3 repositories</span>
+</p>
+</div>
+<div class="flex items-center gap-element-gap-sm">
+<div class="bg-error/10 border border-error text-error px-4 py-2 rounded-lg flex items-center gap-2">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">block</span>
+<span class="font-mono-label text-mono-label">Build blocked: YES</span>
+</div>
+</div>
+</header>
+<!-- Bento Grid Layout -->
+<div class="grid grid-cols-12 gap-column-gutter">
+<!-- Impact Map: Asymmetric Large Card -->
+<section class="col-span-12 lg:col-span-8 technical-card rounded-xl p-6 relative overflow-hidden">
+<h3 class="font-title-sm text-title-sm text-primary mb-6 flex items-center gap-2">
+<span class="material-symbols-outlined">account_tree</span>
+                    Vulnerability Impact Diagram
+                </h3>
+<div class="relative h-[300px] flex items-center justify-around">
+<!-- SVG Connections Overlay -->
+<svg class="absolute inset-0 w-full h-full pointer-events-none">
+<path class="connection-line" d="M 400 150 L 150 75"></path>
+<path class="connection-line" d="M 400 150 L 150 225"></path>
+<path class="connection-line" d="M 150 225 L 650 225" stroke-dasharray="4"></path>
+</svg>
+<!-- Root Node -->
+<div class="impact-node p-4 rounded-lg z-10 text-center pulse-critical border-error">
+<span class="material-symbols-outlined text-error mb-2">bug_report</span>
+<div class="font-mono-label text-mono-label text-on-surface">CVE-2024-45XXX</div>
+<div class="text-[10px] text-on-error-container uppercase font-bold">Vulnerability Root</div>
+</div>
+<!-- Direct Dependencies -->
+<div class="flex flex-col gap-24">
+<div class="impact-node p-4 rounded-lg z-10 text-center w-40">
+<span class="material-symbols-outlined text-primary mb-2">dns</span>
+<div class="font-mono-label text-mono-label">payment-service</div>
+<div class="text-[10px] text-on-surface-variant uppercase">Direct Impact</div>
+</div>
+<div class="impact-node p-4 rounded-lg z-10 text-center w-40">
+<span class="material-symbols-outlined text-primary mb-2">dns</span>
+<div class="font-mono-label text-mono-label">user-service</div>
+<div class="text-[10px] text-on-surface-variant uppercase">Direct Impact</div>
+</div>
+</div>
+<!-- Transitive Dependency -->
+<div class="impact-node p-4 rounded-lg z-10 text-center w-48">
+<span class="material-symbols-outlined text-secondary-container mb-2">hub</span>
+<div class="font-mono-label text-mono-label">analytics-service</div>
+<div class="text-[10px] text-on-surface-variant uppercase">Transitive (spark-core)</div>
+</div>
+</div>
+<div class="mt-4 flex gap-4 text-mono-label text-on-surface-variant">
+<span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-error"></span> Direct Vulnerability</span>
+<span class="flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-secondary-container"></span> Transitive Path</span>
+</div>
+</section>
+<!-- CVE Details Card -->
+<section class="col-span-12 lg:col-span-4 technical-card rounded-xl p-6 severity-glow-critical">
+<h3 class="font-title-sm text-title-sm text-error mb-4 flex items-center gap-2">
+<span class="material-symbols-outlined">info</span>
+                    CVE Details
+                </h3>
+<div class="space-y-4">
+<div class="flex justify-between border-b border-outline-variant/30 pb-2">
+<span class="text-on-surface-variant font-body-sm">CVSS Score</span>
+<span class="text-error font-mono-data font-bold">9.8 CRITICAL</span>
+</div>
+<div class="flex justify-between border-b border-outline-variant/30 pb-2">
+<span class="text-on-surface-variant font-body-sm">Attack Vector</span>
+<span class="text-on-surface font-body-md">Network (RCE)</span>
+</div>
+<div class="flex justify-between border-b border-outline-variant/30 pb-2">
+<span class="text-on-surface-variant font-body-sm">Affected Versions</span>
+<span class="text-on-surface font-mono-data">2.0.0 &lt;= 2.14.1</span>
+</div>
+<div class="flex justify-between border-b border-outline-variant/30 pb-2">
+<span class="text-on-surface-variant font-body-sm">Fixed In</span>
+<span class="text-primary font-mono-data">2.15.0</span>
+</div>
+<p class="text-body-sm text-on-surface-variant leading-relaxed mt-4">
+                        A remote code execution (RCE) vulnerability allows unauthenticated attackers to execute arbitrary code on the target system via manipulated log messages.
+                    </p>
+<a class="inline-flex items-center gap-2 text-primary hover:underline font-mono-label text-mono-label mt-2" href="https://nvd.nist.gov">
+                        View NVD Reference <span class="material-symbols-outlined text-sm">open_in_new</span>
+</a>
+</div>
+</section>
+<!-- Splunk Correlation Card -->
+<section class="col-span-12 lg:col-span-7 technical-card rounded-xl p-6">
+<div class="flex justify-between items-center mb-4">
+<h3 class="font-title-sm text-title-sm text-primary flex items-center gap-2">
+<span class="material-symbols-outlined">analytics</span>
+                        Splunk Correlation
+                    </h3>
+<div class="bg-surface-container-highest px-3 py-1 rounded text-mono-label text-on-surface-variant">
+                        847 events in last 72 hours
+                    </div>
+</div>
+<div class="bg-surface-container-lowest border border-outline-variant p-4 rounded-lg relative group">
+<span class="material-symbols-outlined absolute top-4 right-4 text-on-surface-variant cursor-pointer hover:text-primary transition-colors">content_copy</span>
+<pre class="font-mono-data text-mono-data text-secondary-fixed overflow-x-auto"><span class="text-primary-fixed">index</span>=build_logs <span class="text-on-secondary-fixed-variant">package</span>="log4j-core" 
+| <span class="text-primary-fixed">search</span> version="2.14.0"
+| <span class="text-primary-fixed">stats</span> count <span class="text-primary-fixed">by</span> repository, branch, build_id
+| <span class="text-primary-fixed">where</span> count &gt; 0 
+| <span class="text-primary-fixed">table</span> _time, repository, severity</pre>
+</div>
+<div class="mt-4 flex items-center gap-4">
+<div class="flex-1 h-2 bg-surface-container-highest rounded-full overflow-hidden">
+<div class="h-full bg-error w-3/4"></div>
+</div>
+<span class="text-mono-label text-on-surface-variant">Exposure Index: High (74%)</span>
+</div>
+</section>
+<!-- NIS2 Compliance Note -->
+<section class="col-span-12 lg:col-span-5 technical-card rounded-xl p-6 bg-orange-950/20 border-orange-500/50">
+<h3 class="font-title-sm text-title-sm text-orange-400 mb-3 flex items-center gap-2">
+<span class="material-symbols-outlined">gavel</span>
+                    NIS2 Compliance Note
+                </h3>
+<div class="space-y-3">
+<div class="bg-orange-500/10 border-l-2 border-orange-400 p-3">
+<p class="text-body-sm text-orange-200 leading-tight">
+<strong>Article 21(2)(d):</strong> Supply chain security includes security-related aspects concerning the relationships between each entity and its direct suppliers or service providers.
+                        </p>
+</div>
+<p class="text-body-sm text-on-surface-variant italic">
+                        Manual disclosure required within 24 hours of confirmation. Mandatory SBOM updates for all affected systems defined in Category 1.
+                    </p>
+<button class="w-full mt-2 py-2 border border-orange-400/40 text-orange-400 rounded-lg hover:bg-orange-400/10 transition-colors font-mono-label text-mono-label">
+                        View Compliance Checklist
+                    </button>
+</div>
+</section>
+<!-- Recommended Actions Timeline -->
+<section class="col-span-12 technical-card rounded-xl p-6">
+<h3 class="font-title-sm text-title-sm text-primary mb-8 flex items-center gap-2">
+<span class="material-symbols-outlined">bolt</span>
+                    Recommended Remediation Timeline
+                </h3>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 relative">
+<!-- Step 1 -->
+<div class="relative pl-8 border-l border-outline-variant">
+<div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-error border-4 border-surface-container"></div>
+<div class="text-mono-label text-error font-bold uppercase mb-1">Step 1: Immediate</div>
+<h4 class="font-title-sm text-title-sm text-on-surface mb-2">Block Builds</h4>
+<p class="text-body-sm text-on-surface-variant mb-4">Prevent further deployment of vulnerable artifacts.</p>
+<button class="w-full bg-error text-on-error font-bold py-2 rounded shadow-lg hover:opacity-90 transition-opacity uppercase text-[12px]">Auto-Block</button>
+</div>
+<!-- Step 2 -->
+<div class="relative pl-8 border-l border-outline-variant">
+<div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-primary border-4 border-surface-container"></div>
+<div class="text-mono-label text-primary font-bold uppercase mb-1">Step 2: Remediation</div>
+<h4 class="font-title-sm text-title-sm text-on-surface mb-2">Update Version</h4>
+<p class="text-body-sm text-on-surface-variant mb-4">Automatically patch dependency to 2.15.0.</p>
+<button class="w-full bg-primary text-on-primary font-bold py-2 rounded shadow-lg hover:opacity-90 transition-opacity uppercase text-[12px]">Create PRs</button>
+</div>
+<!-- Step 3 -->
+<div class="relative pl-8 border-l border-outline-variant">
+<div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-secondary-container border-4 border-surface-container"></div>
+<div class="text-mono-label text-secondary-container font-bold uppercase mb-1">Step 3: Verification</div>
+<h4 class="font-title-sm text-title-sm text-on-surface mb-2">Verify Patch</h4>
+<p class="text-body-sm text-on-surface-variant mb-4">Run correlation search to confirm removal.</p>
+<button class="w-full border border-secondary-container text-secondary-container font-bold py-2 rounded hover:bg-secondary-container/10 transition-colors uppercase text-[12px]">Search Splunk</button>
+</div>
+<!-- Step 4 -->
+<div class="relative pl-8 border-l border-outline-variant">
+<div class="absolute -left-[9px] top-0 w-4 h-4 rounded-full bg-tertiary border-4 border-surface-container"></div>
+<div class="text-mono-label text-tertiary font-bold uppercase mb-1">Step 4: Reporting</div>
+<h4 class="font-title-sm text-title-sm text-on-surface mb-2">NIS2 Report</h4>
+<p class="text-body-sm text-on-surface-variant mb-4">Generate and archive compliance disclosure.</p>
+<button class="w-full border border-tertiary text-tertiary font-bold py-2 rounded hover:bg-tertiary/10 transition-colors uppercase text-[12px]">Generate Report</button>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Subtle Background Effect -->
+<div class="fixed inset-0 pointer-events-none z-[-1] opacity-20">
+
+</div>
+<!-- Bottom Nav for Mobile -->
+<nav class="md:hidden fixed bottom-0 left-0 w-full h-16 bg-surface-container flex justify-around items-center border-t border-outline-variant z-50">
+<span class="material-symbols-outlined text-on-surface-variant">dashboard</span>
+<span class="material-symbols-outlined text-primary">security</span>
+<span class="material-symbols-outlined text-on-surface-variant">assignment</span>
+<span class="material-symbols-outlined text-on-surface-variant">inventory_2</span>
+</nav>
+<script>
+        // Micro-interaction for code copy
+        document.querySelector('.material-symbols-outlined[style*="cursor-pointer"]').addEventListener('click', function() {
+            const btn = this;
+            btn.innerText = 'check';
+            btn.classList.add('text-primary');
+            setTimeout(() => {
+                btn.innerText = 'content_copy';
+                btn.classList.remove('text-primary');
+            }, 2000);
+        });
+    </script>
+</body></html>

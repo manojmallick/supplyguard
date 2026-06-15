@@ -1,4 +1,4 @@
-# © 2026 LearnHubPlay BV. SupplyGuard.
+# © 2026 Manoj Mallick. SupplyGuard.
 """The SupplyGuard Agent — the agentic core.
 
 This is what turns SupplyGuard from a one-shot CI script into Agentic Ops. On

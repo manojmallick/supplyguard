@@ -1,4 +1,4 @@
-# © 2026 LearnHubPlay BV. SupplyGuard.
+# © 2026 Manoj Mallick. SupplyGuard.
 """Instrument CI/CD supply-chain events into Splunk via HEC (privacy-safe).
 
 Logs metadata only — package names, versions, hashes, risk decisions. Never raw

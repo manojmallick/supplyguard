@@ -1,4 +1,4 @@
-# © 2026 LearnHubPlay BV. SupplyGuard — runnable end-to-end demo.
+# © 2026 Manoj Mallick. SupplyGuard — runnable end-to-end demo.
 """Run the full SupplyGuard agentic loop with zero network access.
 
     python demo.py            # human-approval gate ON  → block staged

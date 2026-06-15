@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>NIS2 Compliance Report | SupplyGuard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            background-color: #0D0F14;
+            color: #e2e2e9;
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .glow-pill-success {
+            background: rgba(130, 253, 142, 0.1);
+            border: 1px solid #82fd8e;
+            box-shadow: 0 0 8px rgba(130, 253, 142, 0.2);
+        }
+        .glow-pill-error {
+            background: rgba(255, 180, 171, 0.1);
+            border: 1px solid #ffb4ab;
+        }
+        .glow-pill-warning {
+            background: rgba(219, 227, 252, 0.1);
+            border: 1px solid #bec6de;
+        }
+        .technical-border {
+            border: 1px solid #2A3555;
+        }
+        .gauge-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+        }
+        .circular-progress {
+            transform: rotate(-90deg);
+            transition: stroke-dashoffset 1s ease-out;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "outline": "#879484",
+                      "on-secondary-fixed-variant": "#00468d",
+                      "error": "#ffb4ab",
+                      "tertiary-fixed-dim": "#bec6de",
+                      "on-secondary-container": "#002957",
+                      "on-primary-fixed": "#002106",
+                      "inverse-primary": "#006e26",
+                      "secondary-fixed": "#d6e3ff",
+                      "surface-container-lowest": "#0c0e13",
+                      "secondary-container": "#3e90ff",
+                      "surface-container-highest": "#33353a",
+                      "surface-bright": "#37393f",
+                      "primary-fixed": "#81fc8d",
+                      "primary": "#82fd8e",
+                      "on-tertiary-fixed": "#131b2d",
+                      "surface-container-high": "#282a2f",
+                      "on-error": "#690005",
+                      "surface-container": "#1e1f25",
+                      "on-primary": "#003910",
+                      "on-secondary-fixed": "#001b3e",
+                      "tertiary": "#dbe3fc",
+                      "on-background": "#e2e2e9",
+                      "surface-variant": "#33353a",
+                      "surface-container-low": "#1a1b21",
+                      "primary-fixed-dim": "#64df74",
+                      "background": "#111318",
+                      "on-tertiary-fixed-variant": "#3f475a",
+                      "error-container": "#93000a",
+                      "primary-container": "#65e075",
+                      "on-primary-container": "#006120",
+                      "outline-variant": "#3e4a3c",
+                      "inverse-surface": "#e2e2e9",
+                      "secondary-fixed-dim": "#aac7ff",
+                      "on-primary-fixed-variant": "#00531a",
+                      "surface": "#111318",
+                      "on-tertiary-container": "#4b5367",
+                      "tertiary-fixed": "#dae2fb",
+                      "surface-dim": "#111318",
+                      "on-tertiary": "#283043",
+                      "on-surface": "#e2e2e9",
+                      "on-error-container": "#ffdad6",
+                      "on-secondary": "#003064",
+                      "secondary": "#aac7ff",
+                      "surface-tint": "#64df74",
+                      "tertiary-container": "#bfc7df",
+                      "on-surface-variant": "#bdcab9",
+                      "inverse-on-surface": "#2e3036"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "element-gap-md": "16px",
+                      "element-gap-sm": "8px",
+                      "column-gutter": "20px",
+                      "unit": "4px",
+                      "element-gap-xs": "4px",
+                      "sidebar-width": "260px",
+                      "container-padding": "24px"
+              },
+              "fontFamily": {
+                      "mono-label": ["JetBrains Mono"],
+                      "mono-data": ["JetBrains Mono"],
+                      "display-lg": ["Inter"],
+                      "body-sm": ["Inter"],
+                      "body-md": ["Inter"],
+                      "headline-lg-mobile": ["Inter"],
+                      "headline-md": ["Inter"],
+                      "title-sm": ["Inter"]
+              },
+              "fontSize": {
+                      "mono-label": ["12px", {"lineHeight": "16px", "fontWeight": "500"}],
+                      "mono-data": ["13px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "display-lg": ["30px", {"lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "body-sm": ["12px", {"lineHeight": "18px", "fontWeight": "400"}],
+                      "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "headline-lg-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "700"}],
+                      "headline-md": ["20px", {"lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "title-sm": ["16px", {"lineHeight": "24px", "fontWeight": "600"}]
+              }
+            },
+          },
+        }
+      </script>
+</head>
+<body class="flex min-h-screen">
+<!-- SideNavBar -->
+<aside class="fixed left-0 top-0 h-full flex flex-col pt-20 pb-4 w-sidebar-width bg-surface-container-low border-r border-outline-variant z-40">
+<div class="px-6 mb-8">
+<h1 class="font-headline-md text-headline-md font-bold text-primary">SupplyGuard</h1>
+<p class="font-title-sm text-title-sm text-on-surface-variant">Security Operations</p>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="group flex items-center px-4 py-3 gap-element-gap-sm text-on-surface-variant hover:bg-surface-container-highest/50 transition-all" href="dashboard.html">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-mono-label text-mono-label">Dashboard</span>
+</a>
+<a class="group flex items-center px-4 py-3 gap-element-gap-sm text-on-surface-variant hover:bg-surface-container-highest/50 transition-all" href="cve_investigation.html">
+<span class="material-symbols-outlined">security</span>
+<span class="font-mono-label text-mono-label">CVE Investigations</span>
+</a>
+<a class="group flex items-center px-4 py-3 gap-element-gap-sm text-primary bg-primary-container/20 border-r-2 border-primary transition-all" href="nis2_report.html">
+<span class="material-symbols-outlined">assignment</span>
+<span class="font-mono-label text-mono-label">Compliance Reports</span>
+</a>
+<a class="group flex items-center px-4 py-3 gap-element-gap-sm text-on-surface-variant hover:bg-surface-container-highest/50 transition-all" href="#">
+<span class="material-symbols-outlined">inventory_2</span>
+<span class="font-mono-label text-mono-label">Repository Management</span>
+</a>
+<a class="group flex items-center px-4 py-3 gap-element-gap-sm text-on-surface-variant hover:bg-surface-container-highest/50 transition-all" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-mono-label text-mono-label">Settings</span>
+</a>
+</nav>
+<div class="mt-auto space-y-1 border-t border-outline-variant pt-4">
+<a class="group flex items-center px-4 py-3 gap-element-gap-sm text-on-surface-variant hover:bg-surface-container-highest/50 transition-all" href="#">
+<span class="material-symbols-outlined">contact_support</span>
+<span class="font-mono-label text-mono-label">Support</span>
+</a>
+<a class="group flex items-center px-4 py-3 gap-element-gap-sm text-on-surface-variant hover:bg-surface-container-highest/50 transition-all" href="#">
+<span class="material-symbols-outlined">menu_book</span>
+<span class="font-mono-label text-mono-label">Documentation</span>
+</a>
+</div>
+</aside>
+<!-- TopAppBar -->
+<header class="flex justify-between items-center w-full px-container-padding h-16 fixed top-0 z-50 bg-surface-container border-b border-outline-variant pl-[284px]">
+<div class="flex items-center gap-4">
+<span class="font-headline-md text-headline-md font-bold text-primary">NIS2 Article 21 Compliance</span>
+<span class="px-2 py-0.5 bg-surface-container-highest text-on-surface-variant font-mono-data text-mono-data rounded">MAY 2026</span>
+</div>
+<div class="flex items-center gap-4">
+<button class="flex items-center gap-2 px-4 py-2 border border-outline-variant text-on-surface font-mono-label text-mono-label hover:bg-surface-bright/10 transition-colors cursor-pointer">
+<span class="material-symbols-outlined text-[18px]">download</span>
+                DOWNLOAD PDF
+            </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary font-mono-label text-mono-label font-bold hover:opacity-90 transition-opacity cursor-pointer">
+<span class="material-symbols-outlined text-[18px]">mail</span>
+                EMAIL TO DPO
+            </button>
+</div>
+</header>
+<!-- Main Content Canvas -->
+<main class="flex-1 ml-[260px] pt-24 px-container-padding pb-12">
+<div class="max-w-7xl mx-auto space-y-6">
+<!-- Hero Bento Grid Row -->
+<div class="grid grid-cols-12 gap-6">
+<!-- Compliance Score Circle -->
+<div class="col-span-12 lg:col-span-4 bg-surface-container-low technical-border p-6 flex flex-col items-center justify-center relative overflow-hidden">
+
+<div class="gauge-container mb-4">
+<svg class="w-full h-full" viewbox="0 0 100 100">
+<circle cx="50" cy="50" fill="none" r="45" stroke="#1C2436" stroke-width="4"></circle>
+<circle class="circular-progress" cx="50" cy="50" fill="none" r="45" stroke="#82fd8e" stroke-dasharray="282.7" stroke-dashoffset="16.9" stroke-width="4"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="font-display-lg text-display-lg text-primary">94</span>
+<span class="font-mono-label text-mono-label text-on-surface-variant">/ 100</span>
+</div>
+</div>
+<div class="glow-pill-success px-4 py-1 flex items-center gap-2 mb-2">
+<div class="w-2 h-2 rounded-full bg-primary animate-pulse"></div>
+<span class="font-mono-label text-mono-label text-primary">LARGELY COMPLIANT</span>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant text-center max-w-[200px]">Current supply chain security posture exceeds NIS2 minimum requirements.</p>
+</div>
+<!-- Monthly Stats & Metrics -->
+<div class="col-span-12 lg:col-span-8 bg-surface-container-low technical-border p-6">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-title-sm text-title-sm text-on-surface uppercase tracking-wider">Operational Metrics: May 2026</h3>
+<span class="material-symbols-outlined text-on-surface-variant">query_stats</span>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+<div class="space-y-1">
+<span class="font-mono-label text-mono-label text-on-surface-variant uppercase">Total Scanned</span>
+<div class="font-display-lg text-[24px] text-on-surface">4,847</div>
+<span class="font-mono-data text-mono-data text-primary">Dependencies</span>
+</div>
+<div class="space-y-1">
+<span class="font-mono-label text-mono-label text-on-surface-variant uppercase">New Ingests</span>
+<div class="font-display-lg text-[24px] text-on-surface">247</div>
+<span class="font-mono-data text-mono-data text-secondary">Added this month</span>
+</div>
+<div class="space-y-1">
+<span class="font-mono-label text-mono-label text-on-surface-variant uppercase">Threats Neutralized</span>
+<div class="font-display-lg text-[24px] text-primary">4</div>
+<span class="font-mono-data text-mono-data text-on-surface-variant">CVEs Intercepted</span>
+</div>
+<div class="space-y-1">
+<span class="font-mono-label text-mono-label text-on-surface-variant uppercase">MTTR</span>
+<div class="font-display-lg text-[24px] text-on-surface">12.4m</div>
+<span class="font-mono-data text-mono-data text-on-surface-variant">Avg. Response</span>
+</div>
+</div>
+<div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+<div class="bg-surface-container-high p-4 rounded-lg flex items-center gap-4">
+<div class="w-10 h-10 rounded bg-primary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary">verified_user</span>
+</div>
+<div>
+<div class="font-mono-label text-mono-label text-on-surface">SBOM Integrity</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">100% Cryptographic verification</div>
+</div>
+</div>
+<div class="bg-surface-container-high p-4 rounded-lg flex items-center gap-4">
+<div class="w-10 h-10 rounded bg-secondary/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary">hub</span>
+</div>
+<div>
+<div class="font-mono-label text-mono-label text-on-surface">Network Map</div>
+<div class="font-body-sm text-body-sm text-on-surface-variant">1,202 Nodes fully documented</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Compliance Checklist & Risk Trend -->
+<div class="grid grid-cols-12 gap-6">
+<!-- Checklist -->
+<div class="col-span-12 lg:col-span-7 bg-surface-container-low technical-border p-6">
+<h3 class="font-title-sm text-title-sm text-on-surface mb-6 uppercase tracking-wider flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">fact_check</span>
+                        Compliance Checklist
+                    </h3>
+<div class="space-y-3">
+<!-- Success Items -->
+<div class="flex items-center justify-between p-3 bg-surface-container-lowest/50 technical-border border-l-4 border-l-primary">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-body-md text-body-md">Dependency inventory &amp; SBOM generation</span>
+</div>
+<span class="font-mono-data text-mono-data text-primary">COMPLIANT</span>
+</div>
+<div class="flex items-center justify-between p-3 bg-surface-container-lowest/50 technical-border border-l-4 border-l-primary">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-body-md text-body-md">Automated vulnerability scanning (CVE)</span>
+</div>
+<span class="font-mono-data text-mono-data text-primary">COMPLIANT</span>
+</div>
+<div class="flex items-center justify-between p-3 bg-surface-container-lowest/50 technical-border border-l-4 border-l-primary">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+<span class="font-body-md text-body-md">Binary integrity hashing &amp; provenance</span>
+</div>
+<span class="font-mono-data text-mono-data text-primary">COMPLIANT</span>
+</div>
+<!-- Warning/Error Items -->
+<div class="flex items-center justify-between p-3 bg-surface-container-lowest/50 technical-border border-l-4 border-l-tertiary">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-tertiary">warning</span>
+<span class="font-body-md text-body-md">Direct supplier security assessments</span>
+</div>
+<span class="font-mono-data text-mono-data text-tertiary">PENDING (82%)</span>
+</div>
+<div class="flex items-center justify-between p-3 bg-surface-container-lowest/50 technical-border border-l-4 border-l-error">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-error">cancel</span>
+<span class="font-body-md text-body-md">Incident reporting procedure automation</span>
+</div>
+<span class="font-mono-data text-mono-data text-error">ACTION REQUIRED</span>
+</div>
+</div>
+</div>
+<!-- Risk Trend Chart Area -->
+<div class="col-span-12 lg:col-span-5 bg-surface-container-low technical-border p-6 flex flex-col">
+<div class="flex items-center justify-between mb-6">
+<h3 class="font-title-sm text-title-sm text-on-surface uppercase tracking-wider">6-Month Risk Trend</h3>
+<div class="flex gap-2">
+<span class="text-xs text-on-surface-variant font-mono-data">DECREASED 18%</span>
+<span class="material-symbols-outlined text-primary text-[16px]">trending_down</span>
+</div>
+</div>
+<div class="flex-1 min-h-[200px] relative">
+<!-- Custom SVG Chart -->
+<svg class="w-full h-full overflow-visible" viewbox="0 0 400 200">
+<!-- Grid Lines -->
+<line stroke="#2A3555" stroke-dasharray="4" x1="0" x2="400" y1="180" y2="180"></line>
+<line stroke="#2A3555" stroke-dasharray="4" x1="0" x2="400" y1="120" y2="120"></line>
+<line stroke="#2A3555" stroke-dasharray="4" x1="0" x2="400" y1="60" y2="60"></line>
+<!-- Area Gradient -->
+<defs>
+<lineargradient id="chartGradient" x1="0" x2="0" y1="0" y2="1">
+<stop offset="0%" stop-color="#82fd8e" stop-opacity="0.2"></stop>
+<stop offset="100%" stop-color="#82fd8e" stop-opacity="0"></stop>
+</lineargradient>
+</defs>
+<!-- Chart Path -->
+<path d="M0,150 L80,140 L160,110 L240,120 L320,80 L400,60" fill="none" stroke="#82fd8e" stroke-width="3"></path>
+<path d="M0,150 L80,140 L160,110 L240,120 L320,80 L400,60 V180 H0 Z" fill="url(#chartGradient)"></path>
+<!-- Data Points -->
+<circle cx="0" cy="150" fill="#82fd8e" r="4"></circle>
+<circle cx="80" cy="140" fill="#82fd8e" r="4"></circle>
+<circle cx="160" cy="110" fill="#82fd8e" r="4"></circle>
+<circle cx="240" cy="120" fill="#82fd8e" r="4"></circle>
+<circle cx="320" cy="80" fill="#82fd8e" r="4"></circle>
+<circle cx="400" cy="60" fill="#82fd8e" r="4"></circle>
+<!-- Labels -->
+<text fill="#879484" font-family="JetBrains Mono" font-size="10" x="0" y="200">DEC</text>
+<text fill="#879484" font-family="JetBrains Mono" font-size="10" x="80" y="200">JAN</text>
+<text fill="#879484" font-family="JetBrains Mono" font-size="10" x="160" y="200">FEB</text>
+<text fill="#879484" font-family="JetBrains Mono" font-size="10" x="240" y="200">MAR</text>
+<text fill="#879484" font-family="JetBrains Mono" font-size="10" x="320" y="200">APR</text>
+<text fill="#879484" font-family="JetBrains Mono" font-size="10" x="375" y="200">MAY '26</text>
+</svg>
+</div>
+</div>
+</div>
+<!-- Supplier Risk Heatmap Card -->
+<div class="bg-surface-container-low technical-border p-6 overflow-hidden">
+<div class="flex justify-between items-center mb-6">
+<div>
+<h3 class="font-title-sm text-title-sm text-on-surface uppercase tracking-wider">Critical Infrastructure Dependencies</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">Automated analysis of 1st and 2nd degree supplier risk profiles.</p>
+</div>
+<button class="font-mono-label text-mono-label text-primary hover:underline">VIEW FULL MAP</button>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+<!-- Supplier Item -->
+<div class="p-3 bg-surface-container-high border border-outline-variant/30 rounded flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<span class="font-mono-label text-mono-label text-on-surface">CloudScale Inc</span>
+<div class="w-2 h-2 rounded-full bg-primary shadow-[0_0_8px_rgba(130,253,142,0.6)]"></div>
+</div>
+<div class="font-body-sm text-[10px] text-on-surface-variant">TIER 1 PROVIDER</div>
+<div class="h-1 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 98%"></div>
+</div>
+</div>
+<!-- Repeat for other suppliers -->
+<div class="p-3 bg-surface-container-high border border-outline-variant/30 rounded flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<span class="font-mono-label text-mono-label text-on-surface">DataLink Gmbh</span>
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+</div>
+<div class="font-body-sm text-[10px] text-on-surface-variant">TIER 1 PROVIDER</div>
+<div class="h-1 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 92%"></div>
+</div>
+</div>
+<div class="p-3 bg-surface-container-high border border-outline-variant/30 rounded flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<span class="font-mono-label text-mono-label text-on-surface">FastEdge CD</span>
+<div class="w-2 h-2 rounded-full bg-tertiary"></div>
+</div>
+<div class="font-body-sm text-[10px] text-on-surface-variant">TIER 2 PROVIDER</div>
+<div class="h-1 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-tertiary" style="width: 74%"></div>
+</div>
+</div>
+<div class="p-3 bg-surface-container-high border border-outline-variant/30 rounded flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<span class="font-mono-label text-mono-label text-on-surface">CoreLib OSS</span>
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+</div>
+<div class="font-body-sm text-[10px] text-on-surface-variant">OPEN SOURCE</div>
+<div class="h-1 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 88%"></div>
+</div>
+</div>
+<div class="p-3 bg-surface-container-high border border-outline-variant/30 rounded flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<span class="font-mono-label text-mono-label text-on-surface">AuthFlow Inc</span>
+<div class="w-2 h-2 rounded-full bg-error animate-pulse"></div>
+</div>
+<div class="font-body-sm text-[10px] text-on-surface-variant">CRITICAL TIER 1</div>
+<div class="h-1 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-error" style="width: 45%"></div>
+</div>
+</div>
+<div class="p-3 bg-surface-container-high border border-outline-variant/30 rounded flex flex-col gap-2">
+<div class="flex justify-between items-start">
+<span class="font-mono-label text-mono-label text-on-surface">NetStack</span>
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+</div>
+<div class="font-body-sm text-[10px] text-on-surface-variant">TIER 1 PROVIDER</div>
+<div class="h-1 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 95%"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Section -->
+<footer class="pt-8 border-t border-outline-variant flex flex-col md:flex-row justify-between gap-4">
+<div class="flex items-center gap-2">
+<img alt="Splunk AI Logo" class="w-6 h-6 rounded" data-alt="A minimalist tech logo for an artificial intelligence system featuring a stylized letter S glowing in vibrant green on a deep dark navy technical background. The style is clean, corporate, and futuristic, representing security and intelligence software." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCIqS4DXox1qxd0kG6I9Jm1FUgT6uW6e-PbwTXXKRKrRLjEJz9F51LnGlU0ygRNutH8Rp7Lkt4GuDgXrojRlNhFz_dQZsMKN6mf7tHLMc_QQQIRjgcvwISbPXViRjmoed_clO7lmLMb9rmn_YluKUL7THe3vGKbIc516yQX-LXV_jzzDXulR1gBqQD8tXseQdtAQQSvLSgkQ1ko46N2dsYspqhXcKf2yqShaA40_4wNJRVRS2-WikpRbLbKhatad9rn0yxTRJMfWJsG"/>
+<p class="font-body-sm text-body-sm text-on-surface-variant italic">
+                        This report was automatically generated via <span class="text-on-surface font-semibold">Splunk AI Intelligence Node 04-B</span>. Verification status: Valid.
+                    </p>
+</div>
+<div class="max-w-md">
+<p class="font-body-sm text-[10px] text-outline text-right leading-tight">
+                        LEGAL DISCLAIMER: SupplyGuard compliance reporting is provided as a decision-support tool. It does not constitute legal certification of NIS2 alignment. All data is real-time as of May 31, 2026, 23:59:59 UTC.
+                    </p>
+</div>
+</footer>
+</div>
+</main>
+<!-- Micro-interaction Scripts -->
+<script>
+        // Simple scroll effect for TopAppBar
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 20) {
+                header.classList.add('bg-surface-container/95', 'backdrop-blur-md');
+            } else {
+                header.classList.remove('bg-surface-container/95', 'backdrop-blur-md');
+            }
+        });
+
+        // Dashboard active item highlighting logic is pre-applied in HTML per instructions
+    </script>
+</body></html>

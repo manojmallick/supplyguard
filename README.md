@@ -106,4 +106,4 @@ supplyguard/
 └── spl/                 SPL analytics + NIS2 posture queries
 ```
 
-*© 2026 LearnHubPlay BV · MIT License*
+*© 2026 Manoj Mallick · MIT License*

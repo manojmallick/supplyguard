@@ -1,4 +1,4 @@
-# © 2026 LearnHubPlay BV. SupplyGuard.
+# © 2026 Manoj Mallick. SupplyGuard.
 """Remediation actions the agent can take on a risky build.
 
 Responsible agentic ops: a hard build-block is impactful, so `block_build`

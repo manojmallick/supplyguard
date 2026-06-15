@@ -1,4 +1,4 @@
-# © 2026 LearnHubPlay BV. SupplyGuard.
+# © 2026 Manoj Mallick. SupplyGuard.
 """SupplyGuard — agentic software supply-chain security on Splunk."""
 
 from .config import Config

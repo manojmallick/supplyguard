@@ -1,4 +1,4 @@
-# © 2026 LearnHubPlay BV. SupplyGuard.
+# © 2026 Manoj Mallick. SupplyGuard.
 """Splunk MCP Server client.
 
 The agent *reads* CI/CD and threat-intel data from Splunk through the Splunk MCP
