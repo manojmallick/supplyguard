@@ -81,6 +81,43 @@ logs (`Config.mask_token`).
 
 ---
 
+## Configuration
+
+All settings come from environment variables (see `supplyguard/config.py`).
+
+| Variable | Default | Meaning |
+|---|---|---|
+| `SUPPLYGUARD_DEMO` | `1` | `1` = offline demo with deterministic synthetic data and no network calls; `0` = talk to Splunk |
+| `SPLUNK_HEC_URL` | `https://localhost:8088/services/collector/event` | HTTP Event Collector endpoint that receives CI/CD events |
+| `SPLUNK_HEC_TOKEN` | none | HEC token |
+| `SPLUNK_MCP_URL` | `https://localhost:8089/services/mcp` | Splunk MCP Server the agent reads through (Splunk Cloud: token audience must be `mcp`) |
+| `SPLUNK_MCP_TOKEN` | none | MCP token |
+| `SPLUNK_HOSTED_MODEL` | `foundation-sec-1.1-8b-instruct` | Splunk-hosted model used for triage and the NIS2 narrative |
+| `SPLUNK_HOSTED_MODEL_URL` | `https://localhost:8089/services/ml/v1/chat/completions` | Hosted-model endpoint |
+
+Decision thresholds (CVSS block and flag levels, typosquat edit distance) are constants in `supplyguard/config.py`. Without `--auto`, a hard build block waits for human approval.
+
+### One-command live setup
+
+`run_live.sh` prepares a local Splunk for the dashboard demo: it enables HEC and creates a token, seeds `index=cicd` with seven days of supply-chain data plus the agent's decision, and prints a verification search.
+
+```bash
+SPLUNK_USER=admin SPLUNK_PASSWORD=<password> ./run_live.sh
+```
+
+| Script | Purpose | Variables |
+|---|---|---|
+| `scripts/setup_splunk.py` | Creates the `cicd` index, enables HEC and prints `HEC_TOKEN=<token>` | `SPLUNK_REST_URL` (default `https://localhost:8089`), `SPLUNK_USER` (default `admin`), `SPLUNK_PASSWORD` (required) |
+| `scripts/seed_splunk.py` | Sends the `package_manifest` and `supply_chain_decision` sample events through HEC | the HEC variables above |
+
+## Limitations
+
+- There is no automated test suite; `python demo.py` is the end-to-end check.
+- The demo scenario (`reqursts@2.1.3`, `log4j-core@2.14.0`) is synthetic data.
+- Live mode needs a Splunk instance with the MCP Server and a hosted model available.
+
+---
+
 ## What changed from the original plan
 
 The first draft *claimed* AI but shipped SPL + a fake `levenshtein()`. This build
@@ -105,6 +142,9 @@ supplyguard/
 │   ├── actions.py       block / PR / report / flag (+ approval gate)
 │   └── agent.py         the agentic loop  ← the core
 ├── demo.py              runnable end-to-end demo (no network)
+├── run_live.sh          one-command live Splunk setup and seeding
+├── scripts/             setup_splunk.py, seed_splunk.py
+├── dashboards/          Splunk dashboards
 └── spl/                 SPL analytics + NIS2 posture queries
 ```
 
